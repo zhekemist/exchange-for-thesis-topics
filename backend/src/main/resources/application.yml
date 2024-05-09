@@ -16,7 +16,7 @@ dbs:
     host: 127.0.0.1
     port: 27017
     datasource:
-      url: mongodb://${dbs.mongodb.host}:${dbs.mongodb.port}
+      url: mongodb://${dbs.mongo.host}:${dbs.mongo.port}
 ---
 # Disable MongoDB during development
 spring:
