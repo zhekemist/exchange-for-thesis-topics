@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: backend
+  profiles:
+    active: no-mongo, expose-maria
+dbs:
+  maria:
+    host: 127.0.0.1
+    port: 3306
+    databaseName: test
+    datasource:
+      url: jdbc:mariadb://${dbs.maria.host}:${dbs.maria.port}/${dbs.maria.databaseName}
+      username: root
+      password: imse24
+  mongo:
+    host: 127.0.0.1
+    port: 27017
+    datasource:
+      url: mongodb://${dbs.mongodb.host}:${dbs.mongodb.port}
+---
+# Disable MongoDB during development
+spring:
+  config:
+    activate:
+      on-profile: no-mongo
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+---
+# Expose MariaDB over REST
+spring:
+  config:
+    activate:
+      on-profile: expose-maria
+dbs:
+  maria:
+    rest:
+      expose: True
+---
+# Expose MongoDB over REST
+spring:
+  config:
+    activate:
+      on-profile: expose-mongo
+dbs:
+  mongo:
+    rest:
+      expose: True
