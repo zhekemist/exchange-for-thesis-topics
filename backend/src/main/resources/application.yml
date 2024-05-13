@@ -7,7 +7,7 @@ dbs:
   maria:
     host: 127.0.0.1
     port: 3306
-    databaseName: test
+    databaseName: topic_exchange
     datasource:
       url: jdbc:mariadb://${dbs.maria.host}:${dbs.maria.port}/${dbs.maria.databaseName}
       username: root

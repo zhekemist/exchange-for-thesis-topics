@@ -1,0 +1,1 @@
+DROP DATABASE topic_exchange;
