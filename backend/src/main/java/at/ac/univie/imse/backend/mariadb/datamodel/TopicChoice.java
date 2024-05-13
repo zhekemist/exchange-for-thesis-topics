@@ -1,16 +1,24 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Table(name = "choose")
-@RequiredArgsConstructor
+@Entity
 @Getter
+@Setter
 public class TopicChoice {
-    private final ThesisTopic topic;
-    private final LocalDateTime timestamp;
-    private final int priorityPoints;
+    @Id
+    private long topicId;
+    @Id
+    private long userId;
+
+    private LocalDateTime timestamp;
+    private int priorityPoints;
+
+    /*@OneToOne(mappedBy = "id")
+    private ThesisTopic topic;*/
 }

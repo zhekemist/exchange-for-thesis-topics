@@ -1,19 +1,18 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-import java.util.List;
-
-@Table(name = "student")
-@RequiredArgsConstructor
+@Entity
 @Getter
-public class Student {
-    @Id private final long id;
-    private final String studyProgram;
-    private final int matriculationNumber;
+@Setter
+public class Student extends User {
+    private String studyProgram;
+    private int matriculationNumber;
 
-    private final List<TopicChoice> choiceList;
+    /*@OneToMany
+    @JoinTable(name = "choose")
+    @JoinColumn(name = "user_id")
+    private Set<TopicChoice> choiceList;*/
 }

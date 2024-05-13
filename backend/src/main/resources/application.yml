@@ -6,6 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    open-in-view: false
 dbs:
   maria:
     host: 127.0.0.1

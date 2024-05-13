@@ -1,17 +1,19 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-@Table(name = "literature_reference")
-@RequiredArgsConstructor
+@Entity
 @Getter
+@Setter
 public class LiteratureReference {
-    @Id private final long referenceNumber;
-    private final int year;
-    private final String title;
-    private final String link;
-    private final String author;
+    @Id
+    private long referenceNumber;
+
+    private int year;
+    private String title;
+    private String link;
+    private String author;
 }

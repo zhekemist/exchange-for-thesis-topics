@@ -1,16 +1,18 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-@Table(name = "research_group")
-@RequiredArgsConstructor
+@Entity
 @Getter
+@Setter
 public class ResearchGroup {
-    @Id private final long id;
-    private final String name;
-    private final String researchProfile;
+    @Id
+    private long groupId;
+
+    private String name;
+    private String researchProfile;
 }

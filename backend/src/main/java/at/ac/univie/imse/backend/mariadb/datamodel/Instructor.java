@@ -1,21 +1,21 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-import java.util.List;
-
-@Table(name = "instructor")
-@RequiredArgsConstructor
+@Entity
 @Getter
-public class Instructor {
-    @Id
-    private final long id;
-    private final String contactInformation;
-    private final boolean isAdministrator;
-    private final ResearchGroup group;
+@Setter
+public class Instructor extends User {
+    private String contactInformation;
+    private boolean isAdministrator;
 
-    private final List<ThesisTopic> topics;
+    /*@ManyToOne
+    @JoinColumn(name = "group_id")
+    private ResearchGroup group;
+
+    @OneToMany
+    @JoinTable(name = "thesis_topic")
+    private Set<ThesisTopic> supervisedTopics;*/
 }

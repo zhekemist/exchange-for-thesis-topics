@@ -1,21 +1,26 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-import java.util.List;
-
-@Table(name = "thesis_topic")
-@RequiredArgsConstructor
+@Entity
 @Getter
+@Setter
 public class ThesisTopic {
-    @Id private final long id;
-    private final String title;
-    private final String description;
+    @Id
+    private long topicId;
 
-    private final List<Category> categories;
-    private final List<LiteratureReference> references;
+    private String title;
+    private String description;
+
+    /*@ManyToMany
+    @JoinTable(name = "belongs_to", joinColumns = {@JoinColumn(name = "topic_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    private Set<Category> categories;
+
+    @OneToMany
+    private Set<LiteratureReference> references;*/
 }

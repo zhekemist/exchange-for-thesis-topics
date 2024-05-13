@@ -1,18 +1,26 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.Setter;
 
-@Table(name = "user")
-@RequiredArgsConstructor
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type")
 @Getter
+@Setter
 public class User {
     @Id
-    private final long userId;
-    private final String username;
-    private final String name;
-    private final String email;
-    private final String password;
+    private long userId;
+
+    @Column(name = "user_type", columnDefinition = "ENUM('STUDENT','INSTRUCTOR')",
+            insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+
+    private String username;
+    @Embedded
+    private Name name;
+    private String email;
+    private String password;
 }
