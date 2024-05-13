@@ -3,6 +3,9 @@ spring:
     name: backend
   profiles:
     active: no-mongo, expose-maria
+  jpa:
+    hibernate:
+      ddl-auto: validate
 dbs:
   maria:
     host: 127.0.0.1
