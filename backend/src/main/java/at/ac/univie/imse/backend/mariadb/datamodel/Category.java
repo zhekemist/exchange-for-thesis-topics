@@ -1,25 +1,25 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 public class Category {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long categoryId;
 
     private String name;
     private String shortDescription;
 
 
-    /*@OneToMany(mappedBy = "supercategoryId")
-    private Set<Category> subCategories;
-
-    @ManyToMany
-    @JoinTable(name = "belongs_to", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "topic_id")})
-    private Set<ThesisTopic> fittingTopics;*/
+    @OneToMany
+    @JoinColumn(name = "supercategory_id")
+    private Set<Category> subCategories = new HashSet<>();
 }

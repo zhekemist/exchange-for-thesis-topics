@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     @Column(name = "user_type", columnDefinition = "ENUM('STUDENT','INSTRUCTOR')",

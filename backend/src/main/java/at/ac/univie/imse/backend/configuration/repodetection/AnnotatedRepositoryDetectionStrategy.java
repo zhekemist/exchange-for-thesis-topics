@@ -15,12 +15,12 @@ public class AnnotatedRepositoryDetectionStrategy implements RepositoryDetection
     @Override
     public boolean isExported(RepositoryMetadata metadata) {
         Class<?> repositoryInterface = metadata.getRepositoryInterface();
-        ExposedIf exposedIfAnnotation = repositoryInterface.getAnnotation(ExposedIf.class);
+        ExposeViaRestIf exposeViaRestIfAnnotation = repositoryInterface.getAnnotation(ExposeViaRestIf.class);
 
-        boolean expose = (exposedIfAnnotation != null) &&
-                this.springEnv.getProperty(exposedIfAnnotation.value(), boolean.class, false);
+        boolean expose = (exposeViaRestIfAnnotation != null) &&
+                this.springEnv.getProperty(exposeViaRestIfAnnotation.value(), boolean.class, false);
 
-        if (expose){
+        if (expose) {
             log.info("{} will be exposed.", repositoryInterface.getTypeName());
         }
 

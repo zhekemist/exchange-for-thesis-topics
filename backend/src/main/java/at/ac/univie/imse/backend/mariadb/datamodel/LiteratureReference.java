@@ -1,7 +1,6 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class LiteratureReference {
     @Id
+    @Column(name = "reference_number")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long referenceNumber;
 
     private int year;

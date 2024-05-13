@@ -1,7 +1,9 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +13,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TopicChoice {
-    @Id
-    private long topicId;
-    @Id
-    private long userId;
+    @EmbeddedId
+    private TopicChoiceID id;
 
     private LocalDateTime timestamp;
     private int priorityPoints;
 
-    /*@OneToOne(mappedBy = "id")
-    private ThesisTopic topic;*/
+    @OneToOne
+    @JoinColumn(name = "topic_id")
+    private ThesisTopic topic;
 }
