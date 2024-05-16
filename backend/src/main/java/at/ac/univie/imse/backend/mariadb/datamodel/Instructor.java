@@ -16,4 +16,13 @@ public class Instructor extends User {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private ResearchGroup group;
+
+    public Instructor() {}
+
+    public Instructor(UserType userType, String username, Name name, String email, String password, String contactInformation, boolean isAdministrator, ResearchGroup group) {
+        super(userType, username, name, email, password);
+        this.contactInformation = contactInformation;
+        this.isAdministrator = isAdministrator;
+        this.group = group;
+    }
 }

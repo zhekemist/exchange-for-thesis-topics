@@ -17,4 +17,13 @@ public class LiteratureReference {
     private String title;
     private String link;
     private String author;
+
+    public LiteratureReference() {}
+
+    public LiteratureReference(int year, String title, String link, String author) {
+        this.year = year;
+        this.title = title;
+        this.link = link;
+        this.author = author;
+    }
 }

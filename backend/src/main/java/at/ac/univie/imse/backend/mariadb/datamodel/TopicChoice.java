@@ -22,4 +22,12 @@ public class TopicChoice {
     @OneToOne
     @JoinColumn(name = "topic_id")
     private ThesisTopic topic;
+
+    public TopicChoice() {}
+
+    public TopicChoice(LocalDateTime timestamp, int priorityPoints, ThesisTopic topic) {
+        this.timestamp = timestamp;
+        this.priorityPoints = priorityPoints;
+        this.topic = topic;
+    }
 }

@@ -22,4 +22,12 @@ public class Category {
     @OneToMany
     @JoinColumn(name = "supercategory_id")
     private Set<Category> subCategories = new HashSet<>();
+
+    public Category() {}
+
+    public Category(String name, String shortDescription, Set<Category> subCategories) {
+        this.name = name;
+        this.shortDescription = shortDescription;
+        this.subCategories = subCategories;
+    }
 }

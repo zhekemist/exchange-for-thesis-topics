@@ -35,4 +35,14 @@ public class ThesisTopic {
     @ManyToOne
     @JoinColumn(name = "supervisor_id")
     private Instructor supervisor;
+
+    public ThesisTopic() {}
+
+    public ThesisTopic(String title, String description, Set<Category> categories, Map<Long, LiteratureReference> references, Instructor supervisor) {
+        this.title = title;
+        this.description = description;
+        this.categories = categories;
+        this.references = references;
+        this.supervisor = supervisor;
+    }
 }

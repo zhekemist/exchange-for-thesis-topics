@@ -18,4 +18,11 @@ public class ResearchGroup {
 
     private String name;
     private String researchProfile;
+
+    public ResearchGroup() {}
+
+    public ResearchGroup(String name, String researchProfile) {
+        this.name = name;
+        this.researchProfile = researchProfile;
+    }
 }
