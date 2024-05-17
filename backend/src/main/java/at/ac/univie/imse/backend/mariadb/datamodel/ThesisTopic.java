@@ -15,6 +15,7 @@ import java.util.Set;
 @Setter
 public class ThesisTopic {
     @Id
+    @Column(name = "topic_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long topicId;
 
@@ -27,8 +28,7 @@ public class ThesisTopic {
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany
-    @JoinColumn(name = "topic_id")
+    @OneToMany(mappedBy = "topic")
     @MapKey(name = "referenceNumber")
     private Map<Long, LiteratureReference> references = new HashMap<>();
 
@@ -36,7 +36,8 @@ public class ThesisTopic {
     @JoinColumn(name = "supervisor_id")
     private Instructor supervisor;
 
-    public ThesisTopic() {}
+    public ThesisTopic() {
+    }
 
     public ThesisTopic(String title, String description, Set<Category> categories, Map<Long, LiteratureReference> references, Instructor supervisor) {
         this.title = title;
