@@ -7,6 +7,9 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  data:
+    rest:
+      base-path: /api
 dbs:
   maria:
     host: 127.0.0.1
