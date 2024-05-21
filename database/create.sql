@@ -50,12 +50,13 @@ CREATE TABLE IF NOT EXISTS thesis_topic
 
 CREATE TABLE IF NOT EXISTS literature_reference
 (
-    reference_number BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_number BIGINT,
     year             INT    NOT NULL,
     title            TEXT   NOT NULL,
     link             TEXT   NOT NULL,
     author           TEXT   NOT NULL,
     topic_id         BIGINT NOT NULL,
+    PRIMARY KEY (topic_id, reference_number),
     FOREIGN KEY (topic_id) REFERENCES thesis_topic (topic_id) ON DELETE CASCADE
 );
 
