@@ -32,8 +32,4 @@ public class LiteratureReference {
         this.link = link;
         this.author = author;
     }
-
-    public void setThesisTopic(ThesisTopic topic) {
-        this.topic = topic;
-    }
 }
