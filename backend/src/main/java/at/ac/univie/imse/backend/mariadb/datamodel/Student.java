@@ -1,7 +1,6 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +15,11 @@ public class Student extends User {
     private String studyProgram;
     private int matriculationNumber;
 
-    @OneToMany
-    @JoinColumn(name = "user_id")
+    @OneToMany(mappedBy = "student")
     private Set<TopicChoice> choices = new HashSet<>();
 
-    public Student() {}
+    public Student() {
+    }
 
     public Student(UserType userType, String username, Name name, String email, String password, String studyProgram, int matriculationNumber, Set<TopicChoice> choices) {
         super(userType, username, name, email, password);

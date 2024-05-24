@@ -1,12 +1,21 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 
-@Embeddable
-public record TopicChoiceID(@Column(name = "topic_id", insertable = false, updatable = false) long topicId,
-                            @Column(name = "user_id") long userId) implements Serializable {
+@EqualsAndHashCode
+@AllArgsConstructor
+@Getter
+@Setter
+public class TopicChoiceID implements Serializable {
+    private long topic;
+    private long student;
+
+    private TopicChoiceID() {
+    }
 }
