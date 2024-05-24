@@ -19,4 +19,13 @@ public class Student extends User {
     @OneToMany
     @JoinColumn(name = "user_id")
     private Set<TopicChoice> choices = new HashSet<>();
+
+    public Student() {}
+
+    public Student(UserType userType, String username, Name name, String email, String password, String studyProgram, int matriculationNumber, Set<TopicChoice> choices) {
+        super(userType, username, name, email, password);
+        this.studyProgram = studyProgram;
+        this.choices = choices;
+        this.matriculationNumber = matriculationNumber;
+    }
 }
