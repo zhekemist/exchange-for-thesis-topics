@@ -1,7 +1,6 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +16,13 @@ public class Student extends User {
 
     @OneToMany(mappedBy = "student")
     private Set<TopicChoice> choices = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "bookmarked",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "topic_id")}
+    )
+    private Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
 
     public Student() {
     }
