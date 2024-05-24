@@ -24,6 +24,13 @@ public class Student extends User {
     )
     private Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
 
+    @OneToOne
+    @JoinTable(name = "assigned_to",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "topic_id")}
+    )
+    private ThesisTopic assignedTopic;
+
     public Student() {
     }
 
