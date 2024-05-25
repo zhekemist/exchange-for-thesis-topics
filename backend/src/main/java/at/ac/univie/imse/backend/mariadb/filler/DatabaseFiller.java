@@ -28,15 +28,17 @@ public class DatabaseFiller {
     private StudentRepository studentRepository;
     @Autowired
     private ChoiceRepository choiceRepository;
+    @Autowired
+    private TopicAssignmentRepository topicAssignmentRepository;
 
     @PostConstruct
     public void fillDatabaseTables() {
-        fillResearchGroupTable(random.nextInt(20,50));
-        fillCategoryTable(random.nextInt(20,60));
-        fillInstructorTable(random.nextInt(50,120));
-        fillThesisTopicTable(random.nextInt(60,150));
-        fillStudentTable(random.nextInt(50,120));
-//        fillTopicChoiceTable();
+        fillResearchGroupTable(random.nextInt(10,20));
+        fillCategoryTable(random.nextInt(10,20));
+        fillInstructorTable(random.nextInt(20,50));
+        fillThesisTopicTable(random.nextInt(25,60));
+        fillStudentTable(random.nextInt(20,50));
+        fillTopicChoiceTable();
     }
 
     public void fillResearchGroupTable(int numberOfRecords) {
@@ -137,6 +139,9 @@ public class DatabaseFiller {
 
     public void fillStudentTable(int numberOfRecords) {
         UserType type= UserType.STUDENT;
+        Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
+        List<ThesisTopic> thesisTopics = new ArrayList<>();
+        thesisTopicIterable.forEach(thesisTopics::add);
 
         for(int k=0;k<numberOfRecords;k++) {
             String username = faker.name().username();
@@ -145,59 +150,65 @@ public class DatabaseFiller {
             String password = faker.internet().password();
             String studyProgram = faker.educator().course();
             int matriculationNumber = random.nextInt(10000000,99999999);
-//            Set<TopicChoice> choices = new HashSet<>();
-            Set<TopicChoice> choices = getRandomTopicChoices();
+            Set<TopicChoice> choices = new HashSet<>();
 
-            Student student = new Student(type, username, name, email, password, studyProgram, matriculationNumber, choices);
+            Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
+            int numberOfBookmarkedThesisTopics = random.nextInt(7);
+            for(long i = 0; i< numberOfBookmarkedThesisTopics; i++) {
+                ThesisTopic topicToBookmark = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
+                bookmarkedTopics.add(topicToBookmark);
+            }
+
+            Student student = new Student(type, username, name, email, password, studyProgram, matriculationNumber, choices, bookmarkedTopics);
+
+            AssignedTopic assignedThesisTopic = null;
+
+
             studentRepository.save(student);
+
+            if(random.nextInt(10)==8) {
+                ThesisTopic topicToAssign = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
+                String reason = faker.lorem().word();
+                assignedThesisTopic = new AssignedTopic(student, topicToAssign, reason);
+            }
+
+            student.setAssignedTopic(assignedThesisTopic);
+
+            handleThesisTopicAssignment(student);
         }
     }
 
+    public void handleThesisTopicAssignment(Student student) {
+        AssignedTopic assignedTopic = student.getAssignedTopic();
+        if(assignedTopic != null)
+            topicAssignmentRepository.save(assignedTopic);
+    }
 
-    public Set<TopicChoice> getRandomTopicChoices() {
+    public void fillTopicChoiceTable() {
         Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
         List<ThesisTopic> thesisTopics = new ArrayList<>();
         thesisTopicIterable.forEach(thesisTopics::add);
+        Iterable<Student> studentIterable = studentRepository.findAll();
+        List<Student> students = new ArrayList<>();
+        studentIterable.forEach(students::add);
 
-        int remainingPriorityPoints = 1000;
-        int numberOfChoices = random.nextInt(6);
-        Set<TopicChoice> choices = new HashSet<>();
-        for(int i = 0; i< numberOfChoices; i++) {
-            if(remainingPriorityPoints==0)
-                break;
+        for (int k = 0; k < students.size(); k++) {
+            int remainingPriorityPoints = 1000;
+            Student student = students.get(k);
 
-            LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0,60*60*24*365));
-            int usedPriorityPoints = random.nextInt(remainingPriorityPoints);
-            ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
+            int numberOfChoices = random.nextInt(6);
+            for (int i = 0; i < numberOfChoices; i++) {
+                if (remainingPriorityPoints <= 1)
+                    break;
 
-            TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic);
-            choices.add(topicChoice);
-            remainingPriorityPoints = remainingPriorityPoints - usedPriorityPoints;
+                LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0, 60 * 60 * 24 * 365));
+                int usedPriorityPoints = random.nextInt(1,remainingPriorityPoints);
+                ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
+
+                TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic, student);
+                choiceRepository.save(topicChoice);
+                remainingPriorityPoints = remainingPriorityPoints - usedPriorityPoints;
+            }
         }
-
-        return choices;
     }
-
-//    public void fillTopicChoiceTable() {
-//        Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
-//        List<ThesisTopic> thesisTopics = new ArrayList<>();
-//        thesisTopicIterable.forEach(thesisTopics::add);
-//
-//        for(int k=0;k< thesisTopics.size();k++) {
-//            int remainingPriorityPoints = 1000;
-//            int numberOfChoices = random.nextInt(6);
-//            for(int i = 0; i< numberOfChoices; i++) {
-//                if(remainingPriorityPoints==0)
-//                    break;
-//
-//                LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0,60*60*24*365));
-//                int usedPriorityPoints = random.nextInt(remainingPriorityPoints);
-//                ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
-//
-//                TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic);
-//                choiceRepository.save(topicChoice);
-//                remainingPriorityPoints = remainingPriorityPoints - usedPriorityPoints;
-//            }
-//        }
-
 }

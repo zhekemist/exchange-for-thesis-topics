@@ -24,20 +24,17 @@ public class Student extends User {
     )
     private Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
 
-    @OneToOne
-    @JoinTable(name = "assigned_to",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "topic_id")}
-    )
-    private ThesisTopic assignedTopic;
+    @OneToOne(mappedBy = "student")
+    private AssignedTopic assignedTopic;
 
     public Student() {
     }
 
-    public Student(UserType userType, String username, Name name, String email, String password, String studyProgram, int matriculationNumber, Set<TopicChoice> choices) {
+    public Student(UserType userType, String username, Name name, String email, String password, String studyProgram, int matriculationNumber, Set<TopicChoice> choices, Set<ThesisTopic> bookmarkedTopics) {
         super(userType, username, name, email, password);
         this.studyProgram = studyProgram;
         this.choices = choices;
         this.matriculationNumber = matriculationNumber;
+        this.bookmarkedTopics = bookmarkedTopics;
     }
 }
