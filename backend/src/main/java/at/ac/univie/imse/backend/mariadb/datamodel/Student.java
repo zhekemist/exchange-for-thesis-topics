@@ -24,9 +24,6 @@ public class Student extends User {
     )
     private Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
 
-    @OneToOne(mappedBy = "student")
-    private AssignedTopic assignedTopic;
-
     public Student() {
     }
 

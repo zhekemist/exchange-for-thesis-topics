@@ -3,6 +3,7 @@ package at.ac.univie.imse.backend.mariadb.filler;
 import at.ac.univie.imse.backend.mariadb.datamodel.*;
 import at.ac.univie.imse.backend.mariadb.repositories.*;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Component
 public class DatabaseFiller {
     private final Faker faker = new Faker();
@@ -33,16 +35,18 @@ public class DatabaseFiller {
 
     @PostConstruct
     public void fillDatabaseTables() {
-        fillResearchGroupTable(random.nextInt(10,20));
-        fillCategoryTable(random.nextInt(10,20));
-        fillInstructorTable(random.nextInt(20,50));
-        fillThesisTopicTable(random.nextInt(25,60));
-        fillStudentTable(random.nextInt(20,50));
+        fillResearchGroupTable(random.nextInt(10, 20));
+        fillCategoryTable(random.nextInt(10, 20));
+        fillInstructorTable(random.nextInt(20, 50));
+        fillThesisTopicTable(random.nextInt(25, 60));
+        fillStudentTable(random.nextInt(20, 50));
         fillTopicChoiceTable();
+
+        log.info("Filling of the database table is completed.");
     }
 
     public void fillResearchGroupTable(int numberOfRecords) {
-        for(int k=0;k<numberOfRecords;k++) {
+        for (int k = 0; k < numberOfRecords; k++) {
             String name = faker.company().industry();
             String researchProfile = faker.university().name();
 
@@ -53,31 +57,31 @@ public class DatabaseFiller {
 
     public void fillCategoryTable(int numberOfRecords) {
         Vector<Category> existingCategories = new Vector<>();
-        for(int k=0;k<numberOfRecords;k++) {
+        for (int k = 0; k < numberOfRecords; k++) {
             String name = faker.educator().course();
             String shortDescription = faker.programmingLanguage().name();
             Set<Category> subCategories = new HashSet<>();
-            if(existingCategories.size()>4){
+            if (existingCategories.size() > 4) {
                 int numberOfSubCategories = random.nextInt(4);
-                for(int i=0;i<numberOfSubCategories;i++){
+                for (int i = 0; i < numberOfSubCategories; i++) {
                     int indexOfRandomCategory = random.nextInt(existingCategories.size());
                     subCategories.add(existingCategories.get(indexOfRandomCategory));
                 }
             }
 
-            Category category = new Category(name, shortDescription,subCategories);
+            Category category = new Category(name, shortDescription, subCategories);
             categoryRepository.save(category);
             existingCategories.add(category);
         }
     }
 
     public void fillInstructorTable(int numberOfRecords) {
-        UserType type= UserType.INSTRUCTOR;
+        UserType type = UserType.INSTRUCTOR;
         Iterable<ResearchGroup> researchGroupsIterable = groupRepository.findAll();
         List<ResearchGroup> researchGroups = new ArrayList<>();
         researchGroupsIterable.forEach(researchGroups::add);
 
-        for(int k=0;k<numberOfRecords;k++) {
+        for (int k = 0; k < numberOfRecords; k++) {
             String username = faker.name().username();
             Name name = new Name(faker.name().firstName(), faker.name().lastName());
             String email = faker.internet().emailAddress();
@@ -99,18 +103,18 @@ public class DatabaseFiller {
         List<Instructor> existingInstructors = new ArrayList<>();
         instructorIterableIterable.forEach(existingInstructors::add);
 
-        for(int k=0;k<numberOfRecords;k++) {
+        for (int k = 0; k < numberOfRecords; k++) {
             String title = faker.lorem().word();
             String description = faker.lorem().sentence();
             Set<Category> categories = new HashSet<>();
             int numberOfCategories = random.nextInt(6);
-            for(int i = 0; i< numberOfCategories; i++){
+            for (int i = 0; i < numberOfCategories; i++) {
                 int indexOfRandomCategory = random.nextInt(existingCategories.size());
                 categories.add(existingCategories.get(indexOfRandomCategory));
             }
             Map<Long, LiteratureReference> references = new HashMap<>();
             int numberOfReferences = random.nextInt(21);
-            for(long i = 0; i< numberOfReferences; i++) {
+            for (long i = 0; i < numberOfReferences; i++) {
                 int referenceYear = random.nextInt(1975, 2024);
                 String referenceTitle = faker.lorem().word();
                 String referenceLink = faker.internet().url();
@@ -138,24 +142,24 @@ public class DatabaseFiller {
     }
 
     public void fillStudentTable(int numberOfRecords) {
-        UserType type= UserType.STUDENT;
+        UserType type = UserType.STUDENT;
         Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
         List<ThesisTopic> thesisTopics = new ArrayList<>();
         thesisTopicIterable.forEach(thesisTopics::add);
 
-        for(int k=0;k<numberOfRecords;k++) {
+        for (int k = 0; k < numberOfRecords; k++) {
             String username = faker.name().username();
             Name name = new Name(faker.name().firstName(), faker.name().lastName());
             String email = faker.internet().emailAddress();
             String password = faker.internet().password();
             String studyProgram = faker.educator().course();
-            int matriculationNumber = random.nextInt(10000000,99999999);
+            int matriculationNumber = random.nextInt(10000000, 99999999);
             Set<TopicChoice> choices = new HashSet<>();
 
             Set<ThesisTopic> bookmarkedTopics = new HashSet<>();
             int numberOfBookmarkedThesisTopics = random.nextInt(7);
-            for(long i = 0; i< numberOfBookmarkedThesisTopics; i++) {
-                ThesisTopic topicToBookmark = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
+            for (long i = 0; i < numberOfBookmarkedThesisTopics; i++) {
+                ThesisTopic topicToBookmark = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
                 bookmarkedTopics.add(topicToBookmark);
             }
 
@@ -166,23 +170,15 @@ public class DatabaseFiller {
 
             studentRepository.save(student);
 
-            if(random.nextInt(10)==8) {
-                ThesisTopic topicToAssign = thesisTopics.get(random.nextInt(thesisTopics.size()-1));
+            if (random.nextInt(10) == 8) {
+                ThesisTopic topicToAssign = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
                 String reason = faker.lorem().word();
                 assignedThesisTopic = new AssignedTopic(student, topicToAssign, reason);
+                topicAssignmentRepository.save(assignedThesisTopic);
             }
-
-            student.setAssignedTopic(assignedThesisTopic);
-
-            handleThesisTopicAssignment(student);
         }
     }
 
-    public void handleThesisTopicAssignment(Student student) {
-        AssignedTopic assignedTopic = student.getAssignedTopic();
-        if(assignedTopic != null)
-            topicAssignmentRepository.save(assignedTopic);
-    }
 
     public void fillTopicChoiceTable() {
         Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
@@ -202,7 +198,7 @@ public class DatabaseFiller {
                     break;
 
                 LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0, 60 * 60 * 24 * 365));
-                int usedPriorityPoints = random.nextInt(1,remainingPriorityPoints);
+                int usedPriorityPoints = random.nextInt(1, remainingPriorityPoints);
                 ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
 
                 TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic, student);
