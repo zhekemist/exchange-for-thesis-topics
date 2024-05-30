@@ -18,5 +18,6 @@ public class DataRestConfiguration implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         RepositoryRestConfigurer.super.configureRepositoryRestConfiguration(config, cors);
         config.setRepositoryDetectionStrategy(new AnnotatedRepositoryDetectionStrategy(this.springEnv));
+        cors.addMapping("/**");
     }
 }
