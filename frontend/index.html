@@ -65,6 +65,7 @@
             <br>
 
             <div x-data="{activeTopicIndex: null, activeTopicModal: null }">
+                <button @click="fetchTopicData"> Click </button>
                 <div class="accordion">
                     <template x-for="(topic, index) in topics" :key="index">
                         <div class="accordion-item">

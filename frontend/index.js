@@ -32,11 +32,26 @@ document.addEventListener('alpine:init', () => {
             { id: 10, title: "Internet of Things (IoT)", instructor: "Dr. Lee", description: "Integration of devices, sensors, and software for interconnected IoT ecosystems." }
         ],
 
-        activeTopicIndex: null, // Initialize an array with the length of topics and all elements set to false
+        activeTopicIndex: null,
 
-        activeTopicModal: null
+        activeTopicModal: null,
+
+        async fetchTopicData(){
+            try {
+                const response = await fetch("http://localhost:8080/api/thesisTopics", {mode:'no-cors'});
+
+                if(!response.ok)
+                    throw new Error("Topic data could not be fetched")
+
+                const data = await response.json();
+                console.log(data);
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+
 
     }));
 
 });
-
