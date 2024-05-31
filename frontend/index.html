@@ -21,14 +21,14 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-md bg-body-secondary px-4" x-data="userManager">
+        <nav class="navbar navbar-expand-md bg-body-secondary px-4" x-data="userManager" x-init="fetchUserData">
             <a class="navbar-brand">
                 <img src="uniLogo.png" class="img-fluid" style="height: 40px; width: auto;">
                 Thesis Topic Exchange
             </a>
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <div class="nav-link" x-show="_currentUser == 0">Wird nur für den Klaas angezeigt!</div>
+                    <div class="nav-link" x-show="dataAvailable == true && currentUser.userType == 'INSTRUCTOR'">Wird nur für den Klaas angezeigt!</div>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto" >
@@ -43,7 +43,7 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="changeUserDropDown">
                             <template x-for="(user, index) in users">
-                                <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user"></a></li>
+                                <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user.name"></a></li>
                             </template>
                         </ul>
                     </div>
@@ -64,8 +64,7 @@
             <h2>Thesis Topics</h2>
             <br>
 
-            <div x-data="{activeTopicIndex: null, activeTopicModal: null }">
-                <button @click="fetchTopicData"> Click </button>
+            <div x-data="{activeTopicIndex: null, activeTopicModal: null }" x-init="fetchTopicData">
                 <div class="accordion">
                     <template x-for="(topic, index) in topics" :key="index">
                         <div class="accordion-item">
@@ -87,12 +86,23 @@
                                             <div class="col-md-10">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <p x-text="'Instructor: ' + topic.instructor"></p>
+                                                        <p x-text="'Instructor: ' + topic.instructor.name"></p>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
                                                         <p x-text="'Description: ' + topic.description"></p>
+                                                    </div>
+                                                </div>
+                                                <div class="row" x-show="topic.categories.length!=0">
+                                                    <div class="col">
+                                                        Categories:
+                                                        <div style='margin-left: 30px'>
+
+                                                            <template x-for="(category, index) in topic.categories" :key="index">
+                                                                <li x-text="category.name"></li>
+                                                            </template>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
