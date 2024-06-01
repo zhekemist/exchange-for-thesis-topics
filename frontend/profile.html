@@ -20,20 +20,24 @@
     <script src="index.js"></script>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-md bg-body-secondary px-4" x-data="userManager">
+<div x-data="userManager" x-init="fetchUserData">
+    <nav class="navbar navbar-expand-md bg-body-secondary px-4" >
         <a class="navbar-brand">
             <img src="uniLogo.png" class="img-fluid" style="height: 40px; width: auto;">
             Thesis Topic Exchange
         </a>
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
-                <div class="nav-link" x-show="_currentUser == 0">Wird nur für den Klaas angezeigt!</div>
+                <template x-if="dataAvailable == true">
+                    <div class="nav-link" x-show="currentUser.userType == 'INSTRUCTOR'">Wird nur für den Klaas angezeigt!</div>
+                </template>
             </li>
         </ul>
         <ul class="navbar-nav ms-auto" >
             <li class="nav-item">
-                <a class="nav-link" x-text="currentUser"></a>
+                <template x-if="dataAvailable == true">
+                    <a class="nav-link" x-text="currentUser.name"></a>
+                </template>
             </li>
             <li class="nav-item">
                 <div class="dropdown">
@@ -43,18 +47,25 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="changeUserDropDown">
                         <template x-for="(user, index) in users">
-                            <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user"></a></li>
+                            <template x-if="dataAvailable == true">
+                                <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user.name"></a></li>
+                            </template>
                         </template>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <button class="image-button">
+                <button class="image-button" action="profile.html">
                     <img src="profileIcon.png" alt="Button Icon">
                 </button>
             </li>
         </ul>
     </nav>
+
+    <br>
+    <br>
+    <br>
+
 
     <style>
         .navbar-brand img {
@@ -92,5 +103,6 @@
             height: auto; /* Maintain aspect ratio */
         }
     </style>
+</div>
 </body>
 </html>
