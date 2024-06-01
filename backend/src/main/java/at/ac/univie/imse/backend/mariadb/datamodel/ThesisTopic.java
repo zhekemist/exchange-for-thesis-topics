@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class ThesisTopic {
+public class ThesisTopic implements Serializable {
     @Id
     @Column(name = "topic_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

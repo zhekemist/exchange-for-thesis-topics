@@ -1,21 +1,18 @@
 package at.ac.univie.imse.backend.mariadb.datamodel;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 
 import java.io.Serializable;
 
 
 @EqualsAndHashCode
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Embeddable
 public class TopicChoiceID implements Serializable {
     private long topic;
     private long student;
-
-    private TopicChoiceID() {
-    }
 }
