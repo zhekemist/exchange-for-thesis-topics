@@ -1,5 +1,8 @@
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted || window.performance && window.performance.navigation.type === 2) {
+        window.location.reload();
+    }
+});
 
 document.addEventListener('alpine:init', () => {
     Alpine.data('userManager', function () {
@@ -12,6 +15,10 @@ document.addEventListener('alpine:init', () => {
             _currentUser: this.$persist(0),
 
             get currentUser() {
+                return this.users[this._currentUser];
+            },
+
+            get currentUserPriorityPoints() {
                 return this.users[this._currentUser];
             },
 
@@ -35,6 +42,7 @@ document.addEventListener('alpine:init', () => {
                     console.log(students[0]._links.choices.href)
 
                     for(let i=0; i<students.length; i++) {
+                        console.log(students[i]);
                         const name = students[i].name.firstName + " " + students[i].name.lastName;
                         const matriculationNumber = students[i].matriculationNumber;
                         let email = students[i].email;
@@ -51,19 +59,16 @@ document.addEventListener('alpine:init', () => {
                             const studentChoicesData = await response.json();
                             console.log(studentChoicesData);
 
-                            // const categoriesData = thesisTopicCategoryData._embedded.categories;
-                            // for(let k=0; k<categoriesData.length;k++){
-                            //     const name = categoriesData[k].name;
-                            //     const shortDescription = categoriesData[k].shortDescription;
-                            //
-                            //     categories.push({ name: name, shortDescription: shortDescription});
-                            // }
+                            const topicChoicesData = studentChoicesData._embedded.topicChoices;
+                            for(let k=0; k<topicChoicesData.length;k++){
+                                priorityPoints = priorityPoints - topicChoicesData[k].priorityPoints;
+                            }
 
                         } catch (error) {
                             console.log(error)
                         }
 
-                        this.users.push({ name: name, matriculationNumber: matriculationNumber, email: email, studyProgram: studyProgram, username: username, userType: userType })
+                        this.users.push({ name: name, matriculationNumber: matriculationNumber, email: email, studyProgram: studyProgram, username: username, userType: userType, priorityPoints: priorityPoints })
                     }
 
                 } catch (error) {
@@ -97,126 +102,136 @@ document.addEventListener('alpine:init', () => {
                 }
 
                 this.dataAvailable = true;
+                console.log(this.users);
+                console.log(this._currentUser);
             }
         }
     })
 
-    Alpine.data('thesisTopicData', () => ({
-        topics: [
-            // {
-            //     id: 1,
-            //     title: "Machine Learning",
-            //     instructor: "Dr. Müller",
-            //     description: "Introduction to machine learning algorithms and applications."
-            // },
-            // {
-            //     id: 2,
-            //     title: "Data Science",
-            //     instructor: "Prof. Schmidt",
-            //     description: "Fundamentals of data analysis, visualization, and predictive modeling."
-            // },
-            // {
-            //     id: 3,
-            //     title: "Artificial Intelligence",
-            //     instructor: "Dr. Meier",
-            //     description: "Exploration of various AI techniques including neural networks and natural language processing."
-            // },
-            // {
-            //     id: 4,
-            //     title: "Web Development",
-            //     instructor: "Dr. Smith",
-            //     description: "Building dynamic and interactive websites using HTML, CSS, and JavaScript."
-            // },
-            // {
-            //     id: 5,
-            //     title: "Database Management",
-            //     instructor: "Prof. Johnson",
-            //     description: "Understanding and implementing database systems for efficient data storage and retrieval."
-            // }
-        ],
+    Alpine.data('thesisTopicData', function () {
+        return {
+            topics: [
+                // {
+                //     id: 1,
+                //     title: "Machine Learning",
+                //     instructor: "Dr. Müller",
+                //     description: "Introduction to machine learning algorithms and applications."
+                // },
+                // {
+                //     id: 2,
+                //     title: "Data Science",
+                //     instructor: "Prof. Schmidt",
+                //     description: "Fundamentals of data analysis, visualization, and predictive modeling."
+                // },
+                // {
+                //     id: 3,
+                //     title: "Artificial Intelligence",
+                //     instructor: "Dr. Meier",
+                //     description: "Exploration of various AI techniques including neural networks and natural language processing."
+                // },
+                // {
+                //     id: 4,
+                //     title: "Web Development",
+                //     instructor: "Dr. Smith",
+                //     description: "Building dynamic and interactive websites using HTML, CSS, and JavaScript."
+                // },
+                // {
+                //     id: 5,
+                //     title: "Database Management",
+                //     instructor: "Prof. Johnson",
+                //     description: "Understanding and implementing database systems for efficient data storage and retrieval."
+                // }
+            ],
 
-        activeTopicIndex: null,
+            activeTopicIndex: null,
 
-        activeTopicModal: null,
+            activeTopicModal: null,
 
-        async fetchTopicData() {
-            try {
-                const response = await fetch("http://localhost:8080/api/thesisTopics", {mode: 'cors'});
+            choicePriorityPoints: 0,
 
-                if (!response.ok)
-                    throw new Error("Topics data could not be fetched");
+            addChoice () {
+                console.log(this.choicePriorityPoints);
+            },
 
-                const thesisTopicData = await response.json();
-                // console.log(thesisTopicData._embedded.thesisTopics);
-                const thesisTopics = thesisTopicData._embedded.thesisTopics;
-                // console.log(thesisTopics[0]._links);
+            async fetchTopicData() {
+                try {
+                    const response = await fetch("http://localhost:8080/api/thesisTopics", {mode: 'cors'});
 
-                for(let i=0; i<thesisTopics.length; i++){
-                    const title = thesisTopics[i].title;
-                    // console.log(title);
+                    if (!response.ok)
+                        throw new Error("Topics data could not be fetched");
 
-                    const description = thesisTopics[i].description;
-                    // console.log(description);
+                    const thesisTopicData = await response.json();
+                    // console.log(thesisTopicData._embedded.thesisTopics);
+                    const thesisTopics = thesisTopicData._embedded.thesisTopics;
+                    // console.log(thesisTopics[0]._links);
 
-                    let categories = [];
-                    try {
-                        const response = await fetch(thesisTopics[i]._links.categories.href, {mode: 'cors'});
+                    for (let i = 0; i < thesisTopics.length; i++) {
+                        const title = thesisTopics[i].title;
+                        // console.log(title);
 
-                        if (!response.ok)
-                            throw new Error("Topic data could not be fetched");
-                        const thesisTopicCategoryData = await response.json();
-                        // console.log(thesisTopicCategoryData);
+                        const description = thesisTopics[i].description;
+                        // console.log(description);
 
-                        const categoriesData = thesisTopicCategoryData._embedded.categories;
-                        for(let k=0; k<categoriesData.length;k++){
-                            const name = categoriesData[k].name;
-                            const shortDescription = categoriesData[k].shortDescription;
+                        let categories = [];
+                        try {
+                            const response = await fetch(thesisTopics[i]._links.categories.href, {mode: 'cors'});
 
-                            categories.push({ name: name, shortDescription: shortDescription});
-                        }
+                            if (!response.ok)
+                                throw new Error("Topic data could not be fetched");
+                            const thesisTopicCategoryData = await response.json();
+                            // console.log(thesisTopicCategoryData);
 
-                    } catch (error) {
+                            const categoriesData = thesisTopicCategoryData._embedded.categories;
+                            for (let k = 0; k < categoriesData.length; k++) {
+                                const name = categoriesData[k].name;
+                                const shortDescription = categoriesData[k].shortDescription;
+
+                                categories.push({name: name, shortDescription: shortDescription});
+                            }
+
+                        } catch (error) {
                             console.log(error)
+                        }
+                        // console.log(categories);
+
+
+                        let instructor = null;
+                        try {
+                            const response = await fetch(thesisTopics[i]._links.supervisor.href, {mode: 'cors'});
+
+                            if (!response.ok)
+                                throw new Error("Topic data could not be fetched");
+                            const thesisTopicInstructorData = await response.json();
+                            // console.log(thesisTopicInstructorData);
+                            const name = thesisTopicInstructorData.name.firstName + " " + thesisTopicInstructorData.name.lastName;
+                            let contactInformation = thesisTopicInstructorData.contactInformation;
+                            let email = thesisTopicInstructorData.email;
+                            // Forschungsgruppe noch ergänzen
+                            instructor = {name: name, contactInformation: contactInformation, email: email};
+                        } catch (error) {
+                            console.log(error)
+                        }
+                        // console.log(instructor);
+
+                        // references =[]
+                        // console.log(thesisTopics[i].references.length);
+                        // for(let k=0; k<thesisTopics[i].references.length; k++){
+                        //     reference = thesisTopics[i].references[k];
+                        //     console.log(reference);
+                        //     references.push({ title: reference.title});
+                        // }
+                        // console.log(references);
+
+                        this.topics.push({title, instructor, description, categories});
                     }
-                    // console.log(categories);
 
-
-                    let instructor = null;
-                    try {
-                        const response = await fetch(thesisTopics[i]._links.supervisor.href, {mode: 'cors'});
-
-                        if (!response.ok)
-                            throw new Error("Topic data could not be fetched");
-                        const thesisTopicInstructorData = await response.json();
-                         // console.log(thesisTopicInstructorData);
-                         const name = thesisTopicInstructorData.name.firstName + " " + thesisTopicInstructorData.name.lastName;
-                         let contactInformation = thesisTopicInstructorData.contactInformation;
-                         let email = thesisTopicInstructorData.email;
-                         // Forschungsgruppe noch ergänzen
-                        instructor = { name: name, contactInformation: contactInformation, email: email};
-                    } catch (error) {
-                        console.log(error)
-                    }
-                    // console.log(instructor);
-
-                    // references =[]
-                    // console.log(thesisTopics[i].references.length);
-                    // for(let k=0; k<thesisTopics[i].references.length; k++){
-                    //     reference = thesisTopics[i].references[k];
-                    //     console.log(reference);
-                    //     references.push({ title: reference.title});
-                    // }
-                    // console.log(references);
-
-                    this.topics.push({ title, instructor, description, categories});
+                } catch (error) {
+                    console.log(error)
                 }
-
-            } catch (error) {
-                console.log(error)
             }
         }
 
 
-    }));
+    });
 
 });

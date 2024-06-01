@@ -21,19 +21,24 @@
     </head>
 
     <body>
-        <nav class="navbar navbar-expand-md bg-body-secondary px-4" x-data="userManager" x-init="fetchUserData">
+    <div x-data="userManager" x-init="fetchUserData">
+        <nav class="navbar navbar-expand-md bg-body-secondary px-4" >
             <a class="navbar-brand">
                 <img src="uniLogo.png" class="img-fluid" style="height: 40px; width: auto;">
                 Thesis Topic Exchange
             </a>
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <div class="nav-link" x-show="dataAvailable == true && currentUser.userType == 'INSTRUCTOR'">Wird nur für den Klaas angezeigt!</div>
+                    <template x-if="dataAvailable == true">
+                        <div class="nav-link" x-show="currentUser.userType == 'INSTRUCTOR'">Wird nur für den Klaas angezeigt!</div>
+                    </template>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto" >
                 <li class="nav-item">
-                    <a class="nav-link" x-text="currentUser"></a>
+                    <template x-if="dataAvailable == true">
+                        <a class="nav-link" x-text="currentUser.name"></a>
+                    </template>
                 </li>
                 <li class="nav-item">
                     <div class="dropdown">
@@ -43,7 +48,9 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="changeUserDropDown">
                             <template x-for="(user, index) in users">
-                                <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user.name"></a></li>
+                                <template x-if="dataAvailable == true">
+                                    <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user.name"></a></li>
+                                </template>
                             </template>
                         </ul>
                     </div>
@@ -64,7 +71,7 @@
             <h2>Thesis Topics</h2>
             <br>
 
-            <div x-data="{activeTopicIndex: null, activeTopicModal: null }" x-init="fetchTopicData">
+            <div x-init="fetchTopicData">
                 <div class="accordion">
                     <template x-for="(topic, index) in topics" :key="index">
                         <div class="accordion-item">
@@ -98,7 +105,6 @@
                                                     <div class="col">
                                                         Categories:
                                                         <div style='margin-left: 30px'>
-
                                                             <template x-for="(category, index) in topic.categories" :key="index">
                                                                 <li x-text="category.name"></li>
                                                             </template>
@@ -117,7 +123,6 @@
                     </template>
                 </div>
 
-                <!-- Modals -->
                 <template x-for="(topic, index) in topics" :key="'modal-' + index">
                     <div class="modal" :class="{ 'show d-block': activeTopicModal === index }" aria-hidden="true">
                         <div class="modal-dialog">
@@ -132,12 +137,20 @@
                                     <form action="profile.html">
                                         <div class="form-group">
                                             <label :for="'priority-points' + index">Enter the number of priority points you want to set:</label>
-                                            <input type="number" class="form-control" :id="'priority-points' + index" required>
-                                            <div id="priorityPointsHelp" class="form-text">You have 1000 points left.</div>
+                                            <template x-if="dataAvailable">
+                                                <input type="number" class="form-control" :id="'priority-points' + index" min="1" :max="currentUser.priorityPoints" x-model.number="choicePriorityPoints"required>
+                                            </template>
+                                                <template x-if="activeTopicModal == index">
+                                                    <div id="priorityPointsInformation" class="form-text">
+                                                        You have
+                                                                <span x-text="currentUser.priorityPoints"></span>
+                                                        points left.
+                                                    </div>
+                                                </template>
                                         </div>
                                         <br>
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit" class="applyButton">Submit</button>
+                                            <button type="submit" class="applyButton" @click="addChoice">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -232,5 +245,6 @@
 
         </style>
         </div>
+    </div>
     </body>
 </html>
