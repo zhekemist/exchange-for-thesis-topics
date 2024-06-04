@@ -7,11 +7,8 @@ window.addEventListener('pageshow', function(event) {
 document.addEventListener('alpine:init', () => {
     Alpine.data('userManager', function () {
         return {
-            users: [
-                // 'Wolfgang Klaas',
-                // 'Ralph Vigne',
-                // 'Peter Nachname'
-            ],
+            users: [],
+
             _currentUser: this.$persist(0),
 
             get currentUser() {
@@ -39,10 +36,10 @@ document.addEventListener('alpine:init', () => {
                     const studentData = await response.json();
                     console.log(studentData._embedded.students);
                     const students = studentData._embedded.students;
-                    console.log(students[0]._links.choices.href)
+                    // console.log(students[0]._links.choices.href)
 
                     for(let i=0; i<students.length; i++) {
-                        console.log(students[i]);
+                        // console.log(students[i]);
                         const name = students[i].name.firstName + " " + students[i].name.lastName;
                         const matriculationNumber = students[i].matriculationNumber;
                         let email = students[i].email;
@@ -57,7 +54,7 @@ document.addEventListener('alpine:init', () => {
                             if (!response.ok)
                                 throw new Error("Topic data could not be fetched");
                             const studentChoicesData = await response.json();
-                            console.log(studentChoicesData);
+                            // console.log(studentChoicesData);
 
                             const topicChoicesData = studentChoicesData._embedded.topicChoices;
                             for(let k=0; k<topicChoicesData.length;k++){
@@ -68,7 +65,9 @@ document.addEventListener('alpine:init', () => {
                             console.log(error)
                         }
 
-                        this.users.push({ name: name, matriculationNumber: matriculationNumber, email: email, studyProgram: studyProgram, username: username, userType: userType, priorityPoints: priorityPoints })
+                        const link = students[i]._links.self.href;
+
+                        this.users.push({ name: name, matriculationNumber: matriculationNumber, email: email, studyProgram: studyProgram, username: username, userType: userType, priorityPoints: priorityPoints, link: link })
                     }
 
                 } catch (error) {
@@ -82,9 +81,9 @@ document.addEventListener('alpine:init', () => {
                         throw new Error("Topics data could not be fetched");
 
                     const instructorData = await response.json();
-                    console.log(instructorData._embedded.instructors);
+                    // console.log(instructorData._embedded.instructors);
                     const instructors = instructorData._embedded.instructors;
-                    console.log(instructors[0]._links)
+                    // console.log(instructors[0]._links)
 
                     for(let i=0; i<instructors.length; i++) {
                         const name = instructors[i].name.firstName + " " + instructors[i].name.lastName;
@@ -93,8 +92,9 @@ document.addEventListener('alpine:init', () => {
                         const userType = instructors[i].userType;
                         const administrator = instructors[i].administrator;
                         let contactInformation = instructors[i].contactInformation
+                        const link = instructors[i]._links.self.href;
 
-                        this.users.push({ name: name, email: email, username: username, userType: userType, administrator: administrator, contactInformation: contactInformation })
+                        this.users.push({ name: name, email: email, username: username, userType: userType, administrator: administrator, contactInformation: contactInformation, link: link })
                     }
 
                 } catch (error) {
@@ -102,46 +102,18 @@ document.addEventListener('alpine:init', () => {
                 }
 
                 this.dataAvailable = true;
-                console.log(this.users);
-                console.log(this._currentUser);
-            }
-        }
-    })
+                // console.log(this.users);
+                // console.log(this._currentUser);
+            },
 
-    Alpine.data('thesisTopicData', function () {
-        return {
-            topics: [
-                // {
-                //     id: 1,
-                //     title: "Machine Learning",
-                //     instructor: "Dr. Müller",
-                //     description: "Introduction to machine learning algorithms and applications."
-                // },
-                // {
-                //     id: 2,
-                //     title: "Data Science",
-                //     instructor: "Prof. Schmidt",
-                //     description: "Fundamentals of data analysis, visualization, and predictive modeling."
-                // },
-                // {
-                //     id: 3,
-                //     title: "Artificial Intelligence",
-                //     instructor: "Dr. Meier",
-                //     description: "Exploration of various AI techniques including neural networks and natural language processing."
-                // },
-                // {
-                //     id: 4,
-                //     title: "Web Development",
-                //     instructor: "Dr. Smith",
-                //     description: "Building dynamic and interactive websites using HTML, CSS, and JavaScript."
-                // },
-                // {
-                //     id: 5,
-                //     title: "Database Management",
-                //     instructor: "Prof. Johnson",
-                //     description: "Understanding and implementing database systems for efficient data storage and retrieval."
-                // }
-            ],
+
+
+
+
+
+
+
+            topics: [],
 
             activeTopicIndex: null,
 
@@ -149,8 +121,50 @@ document.addEventListener('alpine:init', () => {
 
             choicePriorityPoints: 0,
 
-            addChoice () {
-                console.log(this.choicePriorityPoints);
+            getFormattedTimestamp() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+
+                return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+            },
+
+            async addChoice() {
+                console.log(this.topics[this.activeTopicIndex]);
+                console.log(this.users[this._currentUser]);
+                try {
+                    const data = {
+                        timestamp: this.getFormattedTimestamp(),
+                        priorityPoints: this.choicePriorityPoints,
+                        topic: this.topics[this.activeTopicIndex].link,
+                        student: this.users[this._currentUser].link
+                    };
+
+                    console.log(JSON.stringify(data));
+
+                    const response = await fetch("http://localhost:8080/api/topicChoices", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data) // Convert the data to a JSON string
+                    });
+
+                    // Check if the request was successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    // Parse the JSON response
+                    const responseData = await response.json();
+                    console.log('Success:', responseData);
+                } catch (error) {
+                    console.error('Error:', error);
+                }
             },
 
             async fetchTopicData() {
@@ -222,13 +236,131 @@ document.addEventListener('alpine:init', () => {
                         // }
                         // console.log(references);
 
-                        this.topics.push({title, instructor, description, categories});
+                        const link = thesisTopics[i]._links.self.href;
+
+                        this.topics.push({title: title, instructor: instructor, description: description, categories: categories, link: link});
                     }
 
                 } catch (error) {
                     console.log(error)
                 }
+            },
+
+            userChoices: [],
+
+            getIdFromURL (studentURL){
+                let id = '';
+                let i = studentURL.length;
+                while (i>=0 && !isNaN(studentURL[i-1])) {
+                    id = studentURL[i-1] + id;
+                    i = i-1;
+                }
+                return id;
+            },
+
+            wait(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            },
+
+            async fetchUserChoicesData() {
+                console.log("fetchUserChoicesData");
+                try {
+                    while(!this.dataAvailable){await this.wait(1);}
+
+                    const studentIndex = this.getIdFromURL(this.users[this._currentUser].link);
+                    console.log(studentIndex);
+                    console.log(`http://localhost:8080/api/students/${studentIndex}/choices`);
+                    const response = await fetch(`http://localhost:8080/api/students/${studentIndex}/choices`, { mode: 'cors' });
+
+                    if (!response.ok)
+                        throw new Error("Topics data could not be fetched");
+
+                    const userChoicesData = await response.json();
+                    console.log(userChoicesData._embedded.topicChoices);
+                    console.log("here");
+                    const userChoices = userChoicesData._embedded.topicChoices;
+                    // console.log(userChoices[0]._links.choices.href);
+
+                    for(let i=0; i<userChoices.length; i++) {
+                        console.log(userChoices[i]);
+
+                        const priorityPoints = userChoices[i].priorityPoints;
+
+                        try {
+                            const response = await fetch(userChoices[i]._links.topic.href, {mode: 'cors'});
+
+                            if (!response.ok)
+                                throw new Error("Topics data could not be fetched");
+
+                            const chosenTopicData = await response.json();
+                            console.log(chosenTopicData);
+
+
+                            const title = chosenTopicData.title;
+                            // console.log(title);
+
+                            const description = chosenTopicData.description;
+                            // console.log(description);
+
+                            let categories = [];
+                            try {
+                                const response = await fetch(chosenTopicData._links.categories.href, {mode: 'cors'});
+
+                                if (!response.ok)
+                                    throw new Error("Topic data could not be fetched");
+                                const thesisTopicCategoryData = await response.json();
+                                // console.log(thesisTopicCategoryData);
+
+                                const categoriesData = thesisTopicCategoryData._embedded.categories;
+                                for (let k = 0; k < categoriesData.length; k++) {
+                                    const name = categoriesData[k].name;
+                                    const shortDescription = categoriesData[k].shortDescription;
+
+                                    categories.push({name: name, shortDescription: shortDescription});
+                                }
+                            } catch (error) {
+                                console.log(error)
+                            }
+
+                            let instructor = null;
+                            try {
+                                const response = await fetch(chosenTopicData._links.supervisor.href, {mode: 'cors'});
+
+                                if (!response.ok)
+                                    throw new Error("Topic data could not be fetched");
+                                const thesisTopicInstructorData = await response.json();
+                                // console.log(thesisTopicInstructorData);
+                                const name = thesisTopicInstructorData.name.firstName + " " + thesisTopicInstructorData.name.lastName;
+                                let contactInformation = thesisTopicInstructorData.contactInformation;
+                                let email = thesisTopicInstructorData.email;
+                                // Forschungsgruppe noch ergänzen
+                                instructor = {name: name, contactInformation: contactInformation, email: email};
+                            } catch (error) {
+                                console.log(error)
+                            }
+
+                            const link = chosenTopicData._links.self.href;
+
+                            this.userChoices.push({title: title, instructor: instructor, description: description, categories: categories, link: link, priorityPoints: priorityPoints});
+
+
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+
             }
+        }
+    })
+
+    Alpine.data('thesisTopicData', function () {
+        return {
+
         }
 
 

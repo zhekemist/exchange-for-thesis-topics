@@ -57,21 +57,31 @@ public class DatabaseFiller {
 
     public void fillCategoryTable(int numberOfRecords) {
         Vector<Category> existingCategories = new Vector<>();
+        List<Integer> indexesOfSavedCategories = new ArrayList<>();
+
         for (int k = 0; k < numberOfRecords; k++) {
-            String name = faker.educator().course();
+            int indexOfRandomCategory = random.nextInt(categories.size()-1);
+            while (indexesOfSavedCategories.contains(indexOfRandomCategory)) {
+                indexOfRandomCategory = random.nextInt(categories.size()-1);
+            }
+
+            String name = categories.get(indexOfRandomCategory);
+
             String shortDescription = faker.programmingLanguage().name();
             Set<Category> subCategories = new HashSet<>();
             if (existingCategories.size() > 4) {
                 int numberOfSubCategories = random.nextInt(4);
                 for (int i = 0; i < numberOfSubCategories; i++) {
-                    int indexOfRandomCategory = random.nextInt(existingCategories.size());
-                    subCategories.add(existingCategories.get(indexOfRandomCategory));
+                    int indexOfRandomSubCategory = random.nextInt(existingCategories.size());
+                    subCategories.add(existingCategories.get(indexOfRandomSubCategory));
                 }
             }
 
             Category category = new Category(name, shortDescription, subCategories);
             categoryRepository.save(category);
             existingCategories.add(category);
+
+            indexesOfSavedCategories.add(indexOfRandomCategory);
         }
     }
 
@@ -107,7 +117,7 @@ public class DatabaseFiller {
             String title = faker.lorem().word();
             String description = faker.lorem().sentence();
             Set<Category> categories = new HashSet<>();
-            int numberOfCategories = random.nextInt(6);
+            int numberOfCategories = random.nextInt(1,6);
             for (int i = 0; i < numberOfCategories; i++) {
                 int indexOfRandomCategory = random.nextInt(existingCategories.size());
                 categories.add(existingCategories.get(indexOfRandomCategory));
@@ -207,4 +217,11 @@ public class DatabaseFiller {
             }
         }
     }
+
+    private List<String> categories = Arrays.asList("Artificial Intelligence", "Machine Learning", "Data Science", "Cybersecurity",
+            "Software Engineering", "Computer Networks", "Databases", "Human-Computer Interaction", "Computer Graphics", "Robotics",
+            "Algorithms and Data Structures", "Operating Systems", "Distributed Systems", "Cloud Computing", "Internet of Things (IoT)",
+            "Natural Language Processing", "Bioinformatics", "Blockchain Technology", "Embedded Systems", "Game Development", "Computer Vision",
+            "Quantum Computing", "Software Testing and Quality Assurance", "Big Data", "Information Systems", "Theory of Computation"
+    );
 }

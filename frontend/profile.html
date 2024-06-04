@@ -67,7 +67,87 @@
     <br>
 
 
+    <div class="container mt-5">
+        <h2>Thesis Topic Choices</h2>
+        <br>
+
+        <div x-init="fetchUserChoicesData">
+            <div class="accordion">
+                <template x-for="(topic, index) in userChoices" :key="index">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button"
+                                    @click="activeTopicIndex = activeTopicIndex === index ? null : index"
+                                    :class="{ 'collapsed': activeTopicIndex !== index }"
+                                    :aria-expanded="activeTopicIndex === index ? 'true' : 'false'"
+                                    :aria-controls="'topic-accordion-element' + index">
+                                <span x-text="topic.title"></span>
+                            </button>
+                        </h2>
+                        <div :id="'topic-accordion-element' + index"
+                             class="accordion-collapse collapse"
+                             :class="{ 'show': activeTopicIndex === index }">
+                            <div class="accordion-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p x-text="'Instructor: ' + topic.instructor.name"></p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p x-text="'Description: ' + topic.description"></p>
+                                                </div>
+                                            </div>
+                                            <div class="row" x-show="topic.categories.length!=0">
+                                                <div class="col">
+                                                    Categories:
+                                                    <div style='margin-left: 30px'>
+                                                        <template x-for="(category, index) in topic.categories" :key="index">
+                                                            <li x-text="category.name"></li>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-2 d-flex align-items-center justify-content-center">
+                                            <p>
+                                                Priority points: <span x-text="topic.priorityPoints"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+
     <style>
+        .accordion-button {
+            padding: 30px; /* Increase padding for larger buttons */
+            font-size: 1.25rem; /* Increase font size for better readability */
+            min-height: 70px; /* Set a minimum height */
+        }
+
+        .accordion-body {
+            padding: 20px; /* Increase padding inside the accordion body */
+            min-height: 100px; /* Set a minimum height for the body */
+            background-color: #f8f9fa; /* Optional: Change background color */
+        }
+
+        .accordion-collapse {
+            position: relative;
+        }
+
+        .accordion-item {
+            margin-bottom: 5px; /* Add margin-bottom to create space between accordion items */
+        }
         .navbar-brand img {
             margin-right: 10px; /* Space between image and divider */
         }
@@ -102,6 +182,35 @@
             width: 38px; /* Adjust width as needed */
             height: auto; /* Maintain aspect ratio */
         }
+
+        .applyButton {
+            background-color: transparent;
+            border: 2px solid #ccc; /* Grey border */
+            color: #666; /* Grey text color */
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
+            border-radius: 10px; /* Rounded edges */
+        }
+
+        .applyButton:hover {
+            background-color: #ccc; /* Grey background color on hover */
+            color: #666; /* White text color on hover */
+            border-color: #666; /* Dark grey border color on hover */
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+            backdrop-filter: blur(5px); /* Apply blur effect */
+            z-index: 1050; /* Ensure it's above the modal */
+            display: none; /* Initially hidden */
+        }
+
     </style>
 </div>
 </body>
