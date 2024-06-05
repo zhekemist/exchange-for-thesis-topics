@@ -60,9 +60,9 @@ public class DatabaseFiller {
         List<Integer> indexesOfSavedCategories = new ArrayList<>();
 
         for (int k = 0; k < numberOfRecords; k++) {
-            int indexOfRandomCategory = random.nextInt(categories.size()-1);
+            int indexOfRandomCategory = random.nextInt(categories.size() - 1);
             while (indexesOfSavedCategories.contains(indexOfRandomCategory)) {
-                indexOfRandomCategory = random.nextInt(categories.size()-1);
+                indexOfRandomCategory = random.nextInt(categories.size() - 1);
             }
 
             String name = categories.get(indexOfRandomCategory);
@@ -117,7 +117,7 @@ public class DatabaseFiller {
             String title = faker.lorem().word();
             String description = faker.lorem().sentence();
             Set<Category> categories = new HashSet<>();
-            int numberOfCategories = random.nextInt(1,6);
+            int numberOfCategories = random.nextInt(1, 6);
             for (int i = 0; i < numberOfCategories; i++) {
                 int indexOfRandomCategory = random.nextInt(existingCategories.size());
                 categories.add(existingCategories.get(indexOfRandomCategory));
@@ -180,11 +180,20 @@ public class DatabaseFiller {
 
             studentRepository.save(student);
 
-            if (random.nextInt(10) == 8) {
+            if (random.nextInt(10) == 1) {
+                Iterable<AssignedTopic> assignedThesisTopicRealtionIterable = topicAssignmentRepository.findAll();
+                List<AssignedTopic> assignedThesisTopicsRealtion = new ArrayList<>();
+                assignedThesisTopicRealtionIterable.forEach(assignedThesisTopicsRealtion::add);
+                List<Long> assignedThesisTopicsIds = new ArrayList<>();
+                for (AssignedTopic existingAssignedThesisTopic : assignedThesisTopicsRealtion)
+                    assignedThesisTopicsIds.add(existingAssignedThesisTopic.getTopic().getTopicId());
+
                 ThesisTopic topicToAssign = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
-                String reason = faker.lorem().word();
-                assignedThesisTopic = new AssignedTopic(student, topicToAssign, reason);
-                topicAssignmentRepository.save(assignedThesisTopic);
+                if (!assignedThesisTopicsIds.contains(topicToAssign.getTopicId())) {
+                    String reason = faker.lorem().word();
+                    assignedThesisTopic = new AssignedTopic(student, topicToAssign, reason);
+                    topicAssignmentRepository.save(assignedThesisTopic);
+                }
             }
         }
     }
