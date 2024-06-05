@@ -207,22 +207,32 @@ public class DatabaseFiller {
         List<Student> students = new ArrayList<>();
         studentIterable.forEach(students::add);
 
+        Iterable<TopicChoice> existingTopicChoicesIterable = choiceRepository.findAll();
+        List<TopicChoice> topicChoices = new ArrayList<>();
+        existingTopicChoicesIterable.forEach(topicChoices::add);
+        List<Long> idsOfStudentsWithExistingTopicChoices = new ArrayList<>();
+        for (TopicChoice studentIdsWithTopiChoices : topicChoices)
+            idsOfStudentsWithExistingTopicChoices.add(studentIdsWithTopiChoices.getStudent().getUserId());
+
         for (int k = 0; k < students.size(); k++) {
             int remainingPriorityPoints = 1000;
             Student student = students.get(k);
 
-            int numberOfChoices = random.nextInt(6);
-            for (int i = 0; i < numberOfChoices; i++) {
-                if (remainingPriorityPoints <= 1)
-                    break;
+//            System.out.println(student.getUserId());
+            if (!idsOfStudentsWithExistingTopicChoices.contains(student.getUserId())) {
+                int numberOfChoices = random.nextInt(6);
+                for (int i = 0; i < numberOfChoices; i++) {
+                    if (remainingPriorityPoints <= 1)
+                        break;
 
-                LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0, 60 * 60 * 24 * 365));
-                int usedPriorityPoints = random.nextInt(1, remainingPriorityPoints);
-                ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
+                    LocalDateTime timestamp = LocalDateTime.now().minusSeconds(random.nextInt(0, 60 * 60 * 24 * 365));
+                    int usedPriorityPoints = random.nextInt(1, remainingPriorityPoints);
+                    ThesisTopic topic = thesisTopics.get(random.nextInt(thesisTopics.size() - 1));
 
-                TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic, student);
-                choiceRepository.save(topicChoice);
-                remainingPriorityPoints = remainingPriorityPoints - usedPriorityPoints;
+                    TopicChoice topicChoice = new TopicChoice(timestamp, usedPriorityPoints, topic, student);
+                    choiceRepository.save(topicChoice);
+                    remainingPriorityPoints = remainingPriorityPoints - usedPriorityPoints;
+                }
             }
         }
     }
