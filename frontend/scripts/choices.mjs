@@ -14,12 +14,12 @@ function getFormattedTimestamp() {
 }
 
 const CHOICES_URL = 'http://localhost:8080/api/topicChoices';
+const MAX_PRIORITY_POINTS = 1000;
 
-export async function getTotalPriorityPoints(studentIdLink) {
-    // TODO: Might not work yet!
-    const url = studentIdLink + "/totalPriorityPoints";
+export async function getRemainingPriorityPoints(studentIdLink) {
+    const url = studentIdLink + "/priorityPoints";
     const response = await fetch(url, {mode: "cors"}).then(responseHandler);
-    return response['value'];
+    return MAX_PRIORITY_POINTS - response;
 }
 
 export async function getChoices(studentIdLink) {

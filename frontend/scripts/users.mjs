@@ -1,7 +1,5 @@
 import {alertErrorHandler, responseHandler} from "./utils.mjs";
-import {getChoices, getTotalPriorityPoints} from "./choices.mjs";
 
-const MAX_PRIORITY_POINTS = 1000;
 
 function userFromJson(userJSON) {
     const idLink = userJSON['_links']['self']['href'];
@@ -11,33 +9,9 @@ function userFromJson(userJSON) {
         name += " (" + userJSON['matriculationNumber'] + ")"
     }
     return {
-        _idLink: idLink,
-        _name: name,
-        _isStudent: isStudent,
-
-        get idLink() {
-            return this._idLink;
-        },
-
-        get name() {
-            return this._name;
-        },
-
-        get isStudent() {
-            return this._isStudent;
-        },
-
-        get isInstructor() {
-            return !this._isStudent;
-        },
-
-        get leftPriorityPoints() {
-            return MAX_PRIORITY_POINTS - getTotalPriorityPoints(this._idLink);
-        },
-
-        get choices() {
-            return getChoices(this._idLink);
-        }
+        idLink: idLink,
+        name: name,
+        isStudent: isStudent
     }
 }
 
@@ -65,7 +39,8 @@ function requestUsers(urlList) {
 
 export function createUserManager() {
     return {
-        _users: this.$persist([]), _currentUser: this.$persist(0),
+        _users: this.$persist([]),
+        _currentUser: this.$persist(0),
 
         init() {
             if (!this.usersLoaded) {

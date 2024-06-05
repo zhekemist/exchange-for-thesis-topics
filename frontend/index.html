@@ -25,14 +25,14 @@
 </head>
 
 <body>
-<div>
+<div x-data="userManager">
     <nav class="navbar navbar-expand-md bg-body-secondary">
         <a class="navbar-brand">
             <img src="assets/uniLogo.png" class="img-fluid uni-logo">
             Thesis Topic Exchange
         </a>
         <ul class="navbar-nav ms-auto align-items-center">
-            <template x-data="userManager" x-if="usersLoaded">
+            <template x-if="usersLoaded">
                 <li class="nav-item">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="changeUserDropDown"
@@ -118,21 +118,21 @@
                             <button type="button" class="btn-close" @click="activeTopicModal = null"
                                     aria-label="Close"></button>
                         </div>
-                        <div class="modal-body" x-data="userManager">
-                            <form action="profile.html"
-                                  x-data="{choicePriorityPoints:0}">
+                        <div class="modal-body">
+                            <form action="profile.html" x-data="{choosenPrio: 0, remainingPrio: 0"
+                                  x-effect="remainingPrio = $store.getRemainingPriorityPoints(currentUser.idLink)">
                                 <div class="form-group">
                                     <label :for="'priority-points' + index">Enter the number of priority points you
                                         want to set:</label>
                                     <template x-if="usersLoaded">
                                         <input type="number" class="form-control" :id="'priority-points' + index"
-                                               min="1" :max="currentUser.leftPriorityPoints"
-                                               x-model.number="choicePriorityPoints" required>
+                                               min="1" :max="remainingPrio"
+                                               x-model.number="choosenPrio" required>
                                     </template>
                                     <template x-if="activeTopicModal == index">
                                         <div id="priorityPointsInformation" class="form-text">
                                             You have
-                                            <span x-text="currentUser.leftPriorityPoints"></span>
+                                            <span x-text="remainingPrio"></span>
                                             points left.
                                         </div>
                                     </template>
@@ -140,7 +140,7 @@
                                 <br>
                                 <div class="d-flex justify-content-end">
                                     <button class="applyButton" type="button"
-                                            @click="$store.addChoice(currentUser.idLink, currentTopic.idLink, choicePriorityPoints);
+                                            @click="$store.addChoice(currentUser.idLink, currentTopic.idLink, choosenPrio);
                                             activeTopicModal = null">
                                         Submit
                                     </button>
