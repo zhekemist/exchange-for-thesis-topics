@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Topic Exchange</title>
+
+    <!-- Local Scripts -->
+    <script src="profile.js" type="module"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Local Stylesheet-->
+    <link rel="stylesheet" href="style.css">
+
+    <script defer>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+</head>
+
+<body>
+<div>
+    <nav class="navbar navbar-expand-md bg-body-secondary">
+        <a class="navbar-brand" @click="window.location.href='index.html'">
+            <img src="assets/uniLogo.png" class="img-fluid uni-logo">
+            Thesis Topic Exchange
+        </a>
+        <ul class="navbar-nav ms-auto align-items-center">
+            <button class="btn btn-primary mx-2">Submit Topic</button>
+            <a class="btn btn-danger" href="index.html">Discard Topic</a>
+        </ul>
+    </nav>
+    <div class="container mt-5">
+        <h2>Create a new Thesis Topic</h2>
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <form x-data="{titleFixed: true}">
+                    <div>
+                        <h5>Topic Title</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter the title ..."
+                                   x-effect="$el.disabled = titleFixed; if(titleFixed) $el.classList.add('is-valid')">
+                            <button type="button" class="btn btn-primary" @click="titleFixed = true;"
+                                    x-effect="$el.disabled = titleFixed">
+                                Check Availabilty
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h5>Description</h5>
+                        <textarea class="form-control" placeholder="Enter a description ..."
+                                  x-effect="$el.disabled = !titleFixed"></textarea>
+                    </div>
+                    <div class="mt-3">
+                        <h5>Categories</h5>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for categories ..."
+                                   x-effect="$el.disabled = !titleFixed">
+                            <button type="action" class="btn btn-primary" x-effect="$el.disabled = !titleFixed">
+                                <i class="bi-search me-1"></i>
+                                Search
+                            </button>
+                        </div>
+                        <div class="card text-bg-light my-2">
+                            <div class="card-body text-secondary">
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex w-100 justify-content-between align-items-center">
+                                        <div class="text-center">The Category</div>
+                                        <button class="btn btn-sm btn-secondary" type="button">Add</button>
+                                    </li>
+                                    <li class="list-group-item d-flex w-100 justify-content-between align-items-center">
+                                        <div>
+                                            List group item heading<br/>
+                                            <small>The description</small>
+                                        </div>
+                                        <button class="btn btn-sm btn-secondary" type="button">Add</button>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex w-100 justify-content-between align-items-center">
+                                <div class="text-center">The Category</div>
+                                <button type="button" class="btn-close"></button>
+                            </li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                    </div>
+                    <div class="mt-3">
+                        <h5>Literature References</h5>
+                        <ul class="list-group my-3">
+                            <li class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <h5>The Literature Reference</h5>
+                                    <button type="button" class="btn-close"></button>
+                                </div>
+                                <table class="table-sm">
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">Year</th>
+                                        <td>Mark</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Author</th>
+                                        <td>Jacob</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Blabla</th>
+                                        <td>@twitter</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                        <button class="btn btn-sm btn-primary" type="button"><i class="bi-plus-lg"></i> Add Reference
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

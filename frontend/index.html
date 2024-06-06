@@ -32,8 +32,13 @@
             Thesis Topic Exchange
         </a>
         <ul class="navbar-nav ms-auto align-items-center">
+            <template x-if="usersLoaded && !currentUser.isStudent">
+                <li class="nav-item px-2">
+                    <a class="btn btn-primary" href="create-topic.html">Create new Topic</a>
+                </li>
+            </template>
             <template x-if="usersLoaded">
-                <li class="nav-item">
+                <li class="nav-item px-2">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="changeUserDropDown"
                                 data-bs-toggle="dropdown" aria-expanded="false" x-text="currentUser.name">
@@ -47,7 +52,7 @@
                     </div>
                 </li>
             </template>
-            <li class="nav-item">
+            <li class="nav-item px-2">
                 <a class="btn bi-person-circle user-icon text-secondary" href="profile.html"></a>
             </li>
         </ul>
