@@ -122,7 +122,7 @@
                         </div>
                         <div class="modal-body">
                             <template x-if="currentUser.isStudent==true">
-                                <form action="profile.html" x-data="{choosenPrio: 0, remainingPrio: 0}"
+                                <form x-data="{choosenPrio: 0, remainingPrio: 0}"
                                       x-effect="remainingPrio = $store.getRemainingPriorityPoints(currentUser.idLink)">
                                     <div class="form-group">
                                         <label :for="'priority-points' + index">Enter the number of priority points you
@@ -144,7 +144,8 @@
                                     <div class="d-flex justify-content-end">
                                         <button class="applyButton" type="button"
                                                 @click="$store.addChoice(currentUser.idLink, currentTopic.idLink, choosenPrio);
-                                                activeTopicModal = null">
+                                                activeTopicModal = null;
+                                                window.location.href='profile.html';">
                                             Submit
                                         </button>
                                     </div>

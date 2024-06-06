@@ -29,7 +29,7 @@ export async function getChoices(studentIdLink) {
     for (const topicChoiceJson of response['_embedded']['topicChoices']) {
         result.push({
             priorityPoints: topicChoiceJson['priorityPoints'],
-            topic: await requestTopic(getLink(topicChoiceJson, 'topic'))
+            topicData: await requestTopic(getLink(topicChoiceJson, 'topic'))
         });
     }
     return result;
@@ -55,4 +55,19 @@ export function addChoice(studentIdLink, topicIdLink, priorityPoints) {
             if (!response.ok) throw Error("Response was not okay!");
         }
     ).catch(alertErrorHandler("Failed to send topic choice to server"));
+}
+
+export function createTopicChoicesData(studentUrl) {
+    return {
+        topics: [],
+        activeTopicIndex: null,
+
+        init() {
+            this.topics = getChoices(studentUrl);
+        },
+
+        get currentTopic() {
+            return this.topics[this.activeTopicIndex];
+        }
+    }
 }

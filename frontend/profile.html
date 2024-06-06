@@ -5,75 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Topic Exchange</title>
 
+    <!-- Local Scripts -->
+    <script src="profile.js" type="module"></script>
+
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Alpine JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-
-    <script src="index.js"></script>
+    <!-- Local Stylesheet-->
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<div x-data="userManager" x-init="fetchUserData">
-    <nav class="navbar navbar-expand-md bg-body-secondary px-4" >
+<body>
+<div x-data="userManager">
+    <nav class="navbar navbar-expand-md bg-body-secondary">
         <a class="navbar-brand">
-            <img src="uniLogo.png" class="img-fluid" style="height: 40px; width: auto;">
+            <img src="assets/uniLogo.png" class="img-fluid uni-logo">
             Thesis Topic Exchange
         </a>
-        <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-                <template x-if="dataAvailable == true">
-                    <div class="nav-link" x-show="currentUser.userType == 'INSTRUCTOR'">Wird nur für den Klaas angezeigt!</div>
-                </template>
-            </li>
-        </ul>
-        <ul class="navbar-nav ms-auto" >
-            <li class="nav-item">
-                <template x-if="dataAvailable == true">
-                    <a class="nav-link" x-text="currentUser.name"></a>
-                </template>
-            </li>
-            <li class="nav-item">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="changeUserDropDown"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        Change user
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="changeUserDropDown">
-                        <template x-for="(user, index) in users">
-                            <template x-if="dataAvailable == true">
-                                <li><a class="dropdown-item" href="#" @click="currentUser = index" x-text="user.name"></a></li>
+        <ul class="navbar-nav ms-auto align-items-center">
+            <template x-if="usersLoaded">
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="changeUserDropDown"
+                                data-bs-toggle="dropdown" aria-expanded="false" x-text="currentUser.name">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="changeUserDropDown">
+                            <template x-for="(user, index) in users">
+                                <li><a class="dropdown-item" href="#" @click="currentUser = index"
+                                       x-text="user.name"></a></li>
                             </template>
-                        </template>
-                    </ul>
-                </div>
-            </li>
+                        </ul>
+                    </div>
+                </li>
+            </template>
             <li class="nav-item">
-                <button class="image-button" action="profile.html">
-                    <img src="profileIcon.png" alt="Button Icon">
-                </button>
+                <a class="btn bi-person-circle user-icon text-secondary" href="profile.html"></a>
             </li>
         </ul>
     </nav>
+    <template x-if="currentUser.isStudent">
+        <div x-data="topicChoices(currentUser.idLink)" class="container mt-5">
+            <h2>Thesis Topic Choices</h2>
+            <br>
 
-    <br>
-    <br>
-    <br>
-
-
-    <div class="container mt-5">
-        <h2>Thesis Topic Choices</h2>
-        <br>
-
-        <div x-init="fetchUserChoicesData">
             <div class="accordion">
-                <template x-for="(topic, index) in userChoices" :key="index">
+                <template x-for="(topic, index) in topics" :key="index">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button class="accordion-button" type="button"
@@ -81,7 +66,7 @@
                                     :class="{ 'collapsed': activeTopicIndex !== index }"
                                     :aria-expanded="activeTopicIndex === index ? 'true' : 'false'"
                                     :aria-controls="'topic-accordion-element' + index">
-                                <span x-text="topic.title"></span>
+                                <span x-text="topic.topicData.title"></span>
                             </button>
                         </h2>
                         <div :id="'topic-accordion-element' + index"
@@ -93,19 +78,21 @@
                                         <div class="col-md-10">
                                             <div class="row">
                                                 <div class="col">
-                                                    <p x-text="'Instructor: ' + topic.instructor.name"></p>
+                                                    <p x-text="'Instructor: ' + topic.topicData.instructor.name"></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <p x-text="'Description: ' + topic.description"></p>
+                                                    <p x-text="'Description: ' + topic.topicData.description"></p>
                                                 </div>
                                             </div>
-                                            <div class="row" x-show="topic.categories.length!=0">
+                                            <div class="row" x-show="topic.topicData.categories.length!=0">
                                                 <div class="col">
                                                     Categories:
                                                     <div style='margin-left: 30px'>
-                                                        <template x-for="(category, index) in topic.categories" :key="index">
+                                                        <template
+                                                                x-for="(category, index) in topic.topicData.categories"
+                                                                :key="index">
                                                             <li x-text="category.name"></li>
                                                         </template>
                                                     </div>
@@ -125,93 +112,7 @@
                 </template>
             </div>
         </div>
-    </div>
-
-
-    <style>
-        .accordion-button {
-            padding: 30px; /* Increase padding for larger buttons */
-            font-size: 1.25rem; /* Increase font size for better readability */
-            min-height: 70px; /* Set a minimum height */
-        }
-
-        .accordion-body {
-            padding: 20px; /* Increase padding inside the accordion body */
-            min-height: 100px; /* Set a minimum height for the body */
-            background-color: #f8f9fa; /* Optional: Change background color */
-        }
-
-        .accordion-collapse {
-            position: relative;
-        }
-
-        .accordion-item {
-            margin-bottom: 5px; /* Add margin-bottom to create space between accordion items */
-        }
-        .navbar-brand img {
-            margin-right: 10px; /* Space between image and divider */
-        }
-
-        body {
-            background-image: url('homeBackground.png'); /* Replace with the path to your image */
-            background-size: cover; /* Ensure the image covers the entire background */
-            background-repeat: no-repeat; /* Prevent the image from repeating */
-            background-position: center center; /* Center the image */
-            background-attachment: fixed; /* Ensure the background image stays fixed when scrolling */
-        }
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #333; /* Choose your desired background color */
-            padding: 10px 20px; /* Adjust as needed */
-            z-index: 1000; /* Ensure the navbar is above other elements */
-        }
-
-        .image-button {
-            border: none;
-            background: transparent;
-            padding: 0;
-        }
-
-        .image-button img {
-            margin-left: 10px;
-            display: block;
-            width: 38px; /* Adjust width as needed */
-            height: auto; /* Maintain aspect ratio */
-        }
-
-        .applyButton {
-            background-color: transparent;
-            border: 2px solid #ccc; /* Grey border */
-            color: #666; /* Grey text color */
-            padding: 5px 10px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition */
-            border-radius: 10px; /* Rounded edges */
-        }
-
-        .applyButton:hover {
-            background-color: #ccc; /* Grey background color on hover */
-            color: #666; /* White text color on hover */
-            border-color: #666; /* Dark grey border color on hover */
-        }
-
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
-            backdrop-filter: blur(5px); /* Apply blur effect */
-            z-index: 1050; /* Ensure it's above the modal */
-            display: none; /* Initially hidden */
-        }
-
-    </style>
+    </template>
 </div>
 </body>
 </html>
