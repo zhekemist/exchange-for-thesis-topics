@@ -80,7 +80,7 @@ body {
     border-color: #666;
 }
 
-.modal {
+.special-modal {
     position: fixed;
     top: 0;
     left: 0;

@@ -2,11 +2,11 @@ import {alertErrorHandler, getLink, responseHandler} from "./utils.mjs";
 
 const TOPICS_URL = 'http://localhost:8080/api/thesisTopics'
 
-async function requestCategories(categoriesUrl) {
+export async function requestCategories(categoriesUrl) {
     const response = await fetch(categoriesUrl, {mode: "cors"}).then(responseHandler);
     return response['_embedded']['categories'].map((categoryJson) => {
         return {
-            idLink: getLink(response, 'self'),
+            idLink: getLink(categoryJson, 'self'),
             name: categoryJson['name'],
             shortDescription: categoryJson['shortDescription']
         }

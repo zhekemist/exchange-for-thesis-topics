@@ -115,7 +115,7 @@
         </div>
 
         <template x-for="(topic, index) in topics" :key="'modal-' + index">
-            <div class="modal" :class="{ 'show d-block': activeTopicModal === index }" aria-hidden="true">
+            <div class="modal special-modal" :class="{ 'show d-block': activeTopicModal === index }" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -128,7 +128,9 @@
                         <div class="modal-body">
                             <template x-if="currentUser.isStudent==true">
                                 <form x-data="{choosenPrio: 0, remainingPrio: 0}"
-                                      x-effect="remainingPrio = $store.getRemainingPriorityPoints(currentUser.idLink)">
+                                      x-effect="remainingPrio = $store.getRemainingPriorityPoints(currentUser.idLink)"
+                                      action="javascript:void(0);"
+                                >
                                     <div class="form-group">
                                         <label :for="'priority-points' + index">Enter the number of priority points you
                                             want to set:</label>

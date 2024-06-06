@@ -3,8 +3,12 @@ package at.ac.univie.imse.backend.mariadb.datamodel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,7 +21,11 @@ public class Instructor extends User {
     @JoinColumn(name = "group_id")
     private ResearchGroup group;
 
-    public Instructor() {}
+    @OneToMany(mappedBy = "supervisor")
+    private Set<ThesisTopic> topics = new HashSet<>();
+
+    public Instructor() {
+    }
 
     public Instructor(UserType userType, String username, Name name, String email, String password, String contactInformation, boolean isAdministrator, ResearchGroup group) {
         super(userType, username, name, email, password);
