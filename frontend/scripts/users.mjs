@@ -6,7 +6,9 @@ function userFromJson(userJSON) {
     let name = userJSON['name']['firstName'] + " " + userJSON['name']['lastName'];
     const isStudent = userJSON['userType'] === 'STUDENT';
     if (isStudent) {
-        name += " (" + userJSON['matriculationNumber'] + ")"
+        name += " (Student)"
+    } else {
+        name += " (Instructor)"
     }
     return {
         idLink: idLink,

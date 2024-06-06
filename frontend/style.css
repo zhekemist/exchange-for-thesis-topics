@@ -38,6 +38,7 @@ body {
     background-position: center center;
     background-attachment: fixed;
     padding-top: 4em;
+    padding-bottom: 4em;
 }
 
 .navbar {
