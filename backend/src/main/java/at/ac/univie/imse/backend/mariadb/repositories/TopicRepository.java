@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-@ExposeViaRestIf("dbs.maria.rest.expose")
+@ExposeViaRestIf("mariadb")
 public interface TopicRepository extends PagingAndSortingRepository<ThesisTopic, Long>, CrudRepository<ThesisTopic, Long> {
 
     @RestResource(path = "exists")

@@ -18,7 +18,7 @@ public class AnnotatedRepositoryDetectionStrategy implements RepositoryDetection
         ExposeViaRestIf exposeViaRestIfAnnotation = repositoryInterface.getAnnotation(ExposeViaRestIf.class);
 
         boolean expose = (exposeViaRestIfAnnotation != null) &&
-                this.springEnv.getProperty(exposeViaRestIfAnnotation.value(), boolean.class, false);
+                this.springEnv.matchesProfiles(exposeViaRestIfAnnotation.value());
 
         if (expose) {
             log.info("{} will be exposed.", repositoryInterface.getTypeName());
