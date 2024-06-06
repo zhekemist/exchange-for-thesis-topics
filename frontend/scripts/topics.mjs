@@ -22,11 +22,11 @@ async function requestSupervisor(supervisorUrl) {
     };
 }
 
-async function requestTopicDetails(topicJson) {
+async function requestTopicDetails(topicJson, doSupervisorRequest = true) {
     return {
         idLink: getLink(topicJson, 'self'),
         title: topicJson['title'],
-        instructor: await requestSupervisor(getLink(topicJson, 'supervisor')),
+        instructor: doSupervisorRequest ? (await requestSupervisor(getLink(topicJson, 'supervisor'))) : null,
         description: topicJson['description'],
         categories: await requestCategories(getLink(topicJson, 'categories'))
     };
@@ -36,10 +36,12 @@ export function requestTopic(topicUrl) {
     return fetch(topicUrl, {mode: "cors"}).then(responseHandler).then(topic => requestTopicDetails(topic));
 }
 
-function requestTopics() {
-    return fetch(TOPICS_URL, {mode: "cors"})
+export function requestTopics(url = TOPICS_URL, doSupervisorRequest = true) {
+    return fetch(url, {mode: "cors"})
         .then(responseHandler)
-        .then(topics => Promise.all(topics['_embedded']['thesisTopics'].map(requestTopicDetails)));
+        .then(topics => Promise.all(topics['_embedded']['thesisTopics'].map(
+            (topic) => requestTopicDetails(topic, doSupervisorRequest)
+        )));
 }
 
 export function createTopicData() {
