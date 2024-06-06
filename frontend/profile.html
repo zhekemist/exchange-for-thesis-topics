@@ -27,7 +27,7 @@
 <body>
 <div x-data="userManager">
     <nav class="navbar navbar-expand-md bg-body-secondary">
-        <a class="navbar-brand">
+        <a class="navbar-brand" @click="window.location.href='index.html'">
             <img src="assets/uniLogo.png" class="img-fluid uni-logo">
             Thesis Topic Exchange
         </a>
@@ -53,7 +53,8 @@
         </ul>
     </nav>
     <template x-if="currentUser.isStudent">
-        <div x-data="topicChoices(currentUser.idLink)" class="container mt-5">
+        <div x-data="topicChoices(currentUser.idLink)" class="container mt-5"
+             x-effect="topics = $store.getChoices(currentUser.idLink); activeTopicIndex=null">
             <h2>Your Topic Choices</h2>
             <br>
 

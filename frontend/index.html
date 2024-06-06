@@ -143,9 +143,9 @@
                                     <br>
                                     <div class="d-flex justify-content-end">
                                         <button class="applyButton" type="button"
-                                                @click="$store.addChoice(currentUser.idLink, currentTopic.idLink, choosenPrio);
-                                                activeTopicModal = null;
-                                                window.location.href='profile.html';">
+                                                @click="$store.addChoiceAndRedirect(
+                                                currentUser.idLink, currentTopic.idLink, choosenPrio, 'profile.html');
+                                                activeTopicModal = null;">
                                             Submit
                                         </button>
                                     </div>

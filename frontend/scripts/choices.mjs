@@ -35,7 +35,7 @@ export async function getChoices(studentIdLink) {
     return result;
 }
 
-export function addChoice(studentIdLink, topicIdLink, priorityPoints) {
+function addChoice(studentIdLink, topicIdLink, priorityPoints) {
     console.log(studentIdLink, topicIdLink, priorityPoints);
     const choice = {
         timestamp: getFormattedTimestamp(),
@@ -46,7 +46,7 @@ export function addChoice(studentIdLink, topicIdLink, priorityPoints) {
 
     console.log(JSON.stringify(choice))
 
-    const request = fetch(CHOICES_URL, {
+    return fetch(CHOICES_URL, {
         method: 'POST',
         mode: "cors",
         headers: {'Content-Type': 'application/json'},
@@ -54,7 +54,16 @@ export function addChoice(studentIdLink, topicIdLink, priorityPoints) {
     }).then(response => {
             if (!response.ok) throw Error("Response was not okay!");
         }
-    ).catch(alertErrorHandler("Failed to send topic choice to server"));
+    );
+}
+
+export function addChoiceAndRedirect(studentIdLink, topicIdLink, priorityPoints, redirectUrl) {
+    const request = addChoice(studentIdLink, topicIdLink, priorityPoints);
+    request.then(
+        (_) => {
+            window.location.href = redirectUrl;
+        }
+    ).catch(alertErrorHandler("Failed to send topic choice to server"))
 }
 
 export function createTopicChoicesData(studentUrl) {
