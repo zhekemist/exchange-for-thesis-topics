@@ -220,7 +220,6 @@ public class DatabaseFiller {
             int remainingPriorityPoints = 1000;
             Student student = students.get(k);
 
-//            System.out.println(student.getUserId());
             if (!idsOfStudentsWithExistingTopicChoices.contains(student.getUserId())) {
                 int numberOfChoices = random.nextInt(6);
                 for (int i = 0; i < numberOfChoices; i++) {

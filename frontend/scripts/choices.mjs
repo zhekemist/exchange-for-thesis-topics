@@ -58,12 +58,32 @@ function addChoice(studentIdLink, topicIdLink, priorityPoints) {
 }
 
 export function addChoiceAndRedirect(studentIdLink, topicIdLink, priorityPoints, redirectUrl) {
+    if (priorityPoints < 1) {
+        alert("Input value must be at least 1");
+        return;
+    }
+
     const request = addChoice(studentIdLink, topicIdLink, priorityPoints);
     request.then(
         (_) => {
             window.location.href = redirectUrl;
         }
     ).catch(alertErrorHandler("Failed to send topic choice to server"))
+}
+
+export async function checkIfChoiceAlreadyExists(studentIdLink, topicIdLink) {
+    try {
+        const choices = await getChoices(studentIdLink);
+        for (const choice of choices) {
+            if (choice.topicData.idLink === topicIdLink.idLink) {
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        alertErrorHandler("Failed to read topic choices from request");
+        return false;
+    }
 }
 
 export function createTopicChoicesData(studentUrl) {
