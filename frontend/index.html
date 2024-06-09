@@ -129,65 +129,63 @@
                  class="modal special-modal">
                 <div class="modal-dialog">
                     <template x-if="currentUser.isStudent==true && activeTopicModal==index">
-                        <div class="modal-content" x-data="{choosenPrio: 0, remainingPrio: 0}"
-                             x-effect="remainingPrio = await $store.getRemainingPriorityPoints(currentUser.idLink)">
+                        <div class="modal-content" x-data="{choosenPrio: 0, remainingPrio: 0, choiceExists: true}"
+                             x-effect="remainingPrio = await $store.getRemainingPriorityPoints(currentUser.idLink);
+                                choiceExists = await $store.checkIfChoiceAlreadyExists(currentUser.idLink, currentTopic)">
                             <div class="modal-header">
                                 <h5 class="modal-title">
-                                    <template x-if="remainingPrio>0">
+                                    <template x-if="remainingPrio>0 && !choiceExists">
                                         <span x-text="topic.title"></span>
                                     </template>
-                                    <template x-if="remainingPrio<=0">
+                                    <template x-if="remainingPrio<=0 || choiceExists">
                                         <span>Error</span>
                                     </template>
                                 </h5>
                                 <button @click="activeTopicModal = null" aria-label="Close" class="btn-close"
                                         type="button"></button>
                             </div>
-                            <div x-data="{choiceExists: true}"
-                                 x-effect="choiceExists = await $store.checkIfChoiceAlreadyExists(currentUser.idLink, currentTopic)">
-                                <template x-if="remainingPrio>0 && !choiceExists">
-                                    <div class="modal-body">
-                                        <form action="javascript:void(0);">
-                                            <div class="form-group">
-                                                <label :for="'priority-points' + index">Enter the number of priority
-                                                    points you want to set:</label>
-                                                <template x-if="usersLoaded">
-                                                    <input :id="'priority-points' + index" :max="remainingPrio"
-                                                           class="form-control"
-                                                           min="1"
-                                                           type="number" x-model.number="choosenPrio">
-                                                </template>
-                                                <template x-if="activeTopicModal == index">
-                                                    <div class="form-text" id="priorityPointsInformation">
-                                                        You have
-                                                        <span x-text="remainingPrio"></span>
-                                                        points left.
-                                                    </div>
-                                                </template>
-                                            </div>
-                                            <br>
-                                            <div class="d-flex justify-content-end">
-                                                <button @click="$store.addChoiceAndRedirect(
+                            <template x-if="remainingPrio>0 && !choiceExists">
+                                <div class="modal-body">
+                                    <form action="javascript:void(0);">
+                                        <div class="form-group">
+                                            <label :for="'priority-points' + index">Enter the number of priority
+                                                points you want to set:</label>
+                                            <template x-if="usersLoaded">
+                                                <input :id="'priority-points' + index" :max="remainingPrio"
+                                                       class="form-control"
+                                                       min="1"
+                                                       type="number" x-model.number="choosenPrio">
+                                            </template>
+                                            <template x-if="activeTopicModal == index">
+                                                <div class="form-text" id="priorityPointsInformation">
+                                                    You have
+                                                    <span x-text="remainingPrio"></span>
+                                                    points left.
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <br>
+                                        <div class="d-flex justify-content-end">
+                                            <button @click="$store.addChoiceAndRedirect(
                                                 currentUser.idLink, currentTopic.idLink, choosenPrio, 'profile.html');
                                                 activeTopicModal = null;" class="applyButton"
-                                                        type="button">
-                                                    Submit
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </template>
-                                <template x-if="choiceExists && remainingPrio>0">
-                                    <div class="modal-body">
-                                        You can not apply for the same topic twice, choose a different one.
-                                    </div>
-                                </template>
-                                <template x-if="remainingPrio<=0">
-                                    <div class="modal-body">
-                                        You can no longer apply for Thesis Topics as you have no priotiy points left.
-                                    </div>
-                                </template>
-                            </div>
+                                                    type="button">
+                                                Submit
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </template>
+                            <template x-if="choiceExists && remainingPrio>0">
+                                <div class="modal-body">
+                                    You can not apply for the same topic twice, choose a different one.
+                                </div>
+                            </template>
+                            <template x-if="remainingPrio<=0">
+                                <div class="modal-body">
+                                    You can no longer apply for Thesis Topics as you have no priority points left.
+                                </div>
+                            </template>
                         </div>
                     </template>
                 </div>
