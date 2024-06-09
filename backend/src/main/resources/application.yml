@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   profiles:
-    active: mariadb, suppress-mongodb
+    active: mongodb
   jpa:
     hibernate:
       ddl-auto: validate
@@ -10,6 +10,13 @@ spring:
   data:
     rest:
       base-path: /api
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: imse24
+      database: topic_exchange
+      port: 27017
+      host: localhost
 dbs:
   maria:
     host: 127.0.0.1
@@ -19,11 +26,11 @@ dbs:
       url: jdbc:mariadb://${dbs.maria.host}:${dbs.maria.port}/${dbs.maria.databaseName}
       username: root
       password: imse24
-  mongo:
-    host: 127.0.0.1
-    port: 27017
-    datasource:
-      url: mongodb://${dbs.mongo.host}:${dbs.mongo.port}
+#  mongo:
+#    host: 127.0.0.1
+#    port: 27017
+#    datasource:
+#      url: mongodb://${dbs.mongo.host}:${dbs.mongo.port}
 ---
 # Disable MongoDB during development
 spring:
