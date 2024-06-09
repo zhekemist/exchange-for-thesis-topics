@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,19 +17,18 @@ public class MongoThesisTopic {
     private String topicId;
     private String title;
     private String description;
-    @DBRef
-    private MongoInstructor instructor;
+    private MongoInstructorInThesisTopic instructor;
     private Set<MongoCategory> categories = new HashSet<>();
-    private Set<MongoLiteratureReference> references = new HashSet<>();
+    private Set<MongoLiteratureReference> literatureReferences = new HashSet<>();
 
     public MongoThesisTopic() {
     }
 
-    public MongoThesisTopic(String title, String description, MongoInstructor instructor, Set<MongoCategory> categories, Set<MongoLiteratureReference> references) {
+    public MongoThesisTopic(String title, String description, MongoInstructorInThesisTopic instructor, Set<MongoCategory> categories, Set<MongoLiteratureReference> references) {
         this.title = title;
         this.description = description;
         this.instructor = instructor;
         this.categories = categories;
-        this.references = references;
+        this.literatureReferences = references;
     }
 }

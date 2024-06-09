@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,16 +43,21 @@ public class BackendApplication {
             MongoInstructor instructor = new MongoInstructor("test", "uname", "pword", new MongoName("fname", "lname"), "cinfo", true, researchGroup);
             instructorMongoRepository.save(instructor);
 
-            Set<MongoLiteratureReference> literatureReferenceMap = new HashSet<>();
-            literatureReferenceMap.add(literatureReference);
-            MongoThesisTopic thesisTopic = new MongoThesisTopic("test", "descr", instructor, subCategories, literatureReferenceMap);
+            Set<MongoLiteratureReference> literatureReferences = new HashSet<>();
+            literatureReferences.add(literatureReference);
+            MongoThesisTopic thesisTopic = new MongoThesisTopic("test", "descr", new MongoInstructorInThesisTopic(instructor), subCategories, literatureReferences);
             thesisTopicMongoRepository.save(thesisTopic);
 
+            MongoAssignedTopic assignedTopic = new MongoAssignedTopic("reason", new MongoThesisTopicInAssignedTopic("t", "title", "desc", instructor, subCategories, literatureReferences));
+            LocalDateTime timestamp = LocalDateTime.now();
+            Set<MongoTopicChoice> topicChoices = new HashSet<>();
+            MongoTopicChoice topicChoice = new MongoTopicChoice(new MongoThesisTopicInTopicChoice(thesisTopic), timestamp, 90);
+            topicChoices.add(topicChoice);
+            Set<MongoThesisTopicBookmark> topicBookmarks = new HashSet<>();
+            MongoThesisTopicBookmark topicBookmark = new MongoThesisTopicBookmark(thesisTopic);
+            topicBookmarks.add(topicBookmark);
 
-            Set topics = new HashSet<>();
-            topics.add(thesisTopic);
-            MongoAssignedTopic assignedTopic = new MongoAssignedTopic("reason", thesisTopic);
-            MongoStudent student = new MongoStudent("email", "uname", "pword", new MongoName("r", "r"), 12121212, "stdyprog", topics, topics, assignedTopic);
+            MongoStudent student = new MongoStudent("email", "uname", "pword", new MongoName("r", "r"), 12121212, "stdyprog", topicChoices, topicBookmarks, assignedTopic);
             studentMongoRepository.save(student);
         };
     }
