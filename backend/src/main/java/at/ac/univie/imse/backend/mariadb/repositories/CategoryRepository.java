@@ -8,7 +8,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-@ExposeViaRestIf("mariadb")
+@ExposeViaRestIf("expose-mariadb")
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Long>, CrudRepository<Category, Long> {
     @RestResource(path = "name")
     List<Category> findCategoriesByNameContainsIgnoreCase(String name);

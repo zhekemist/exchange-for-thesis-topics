@@ -6,6 +6,6 @@ import at.ac.univie.imse.backend.mariadb.datamodel.TopicChoiceID;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-@ExposeViaRestIf("mariadb")
+@ExposeViaRestIf("expose-mariadb")
 public interface ChoiceRepository extends PagingAndSortingRepository<TopicChoice, TopicChoiceID>, CrudRepository<TopicChoice, TopicChoiceID> {
 }

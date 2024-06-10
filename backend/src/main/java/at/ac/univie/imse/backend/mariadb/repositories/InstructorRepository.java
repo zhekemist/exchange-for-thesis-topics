@@ -5,6 +5,6 @@ import at.ac.univie.imse.backend.mariadb.datamodel.Instructor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-@ExposeViaRestIf("mariadb")
+@ExposeViaRestIf("expose-mariadb")
 public interface InstructorRepository extends PagingAndSortingRepository<Instructor, Long>, CrudRepository<Instructor, Long> {
 }
