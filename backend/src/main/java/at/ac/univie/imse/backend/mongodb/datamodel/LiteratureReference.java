@@ -17,4 +17,11 @@ public class LiteratureReference {
         this.year = year;
         this.link = link;
     }
+
+    public LiteratureReference(at.ac.univie.imse.backend.mariadb.datamodel.LiteratureReference literatureReference) {
+        this.title = literatureReference.getTitle();
+        this.author = literatureReference.getAuthor();
+        this.year = literatureReference.getYear();
+        this.link = literatureReference.getLink();
+    }
 }
