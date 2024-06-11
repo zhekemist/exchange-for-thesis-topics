@@ -1,0 +1,50 @@
+services:
+  frontend:
+    build: ./frontend
+    image: frontend
+    container_name: frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - backend
+
+  #  backend:
+  #    build: ./backend
+  #    image: backend
+  #    container_name: backend
+  #    networks:
+  #      - backend
+  #      - databases
+
+  mariadb:
+    build: ./database/mariadb
+    image: mariadb
+    container_name: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=imse24
+      - MARIADB_DATABASE=topic_exchange
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - databases
+
+  mongodb:
+    build: ./database/mongodb
+    image: mongodb
+    container_name: mongodb
+    volumes:
+      - mongodb-data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=imse24
+    networks:
+      - databases
+
+volumes:
+  mariadb-data:
+  mongodb-data:
+
+networks:
+  backend:
+  databases:
