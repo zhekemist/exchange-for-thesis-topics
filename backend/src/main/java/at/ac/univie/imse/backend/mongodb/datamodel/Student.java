@@ -1,30 +1,29 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
 @Data
-@Document
-public class MongoStudent {
+@NoArgsConstructor
+@Document(collection = "students")
+public class Student {
     @Id
-    private String userId;
+    private long userId;
     private String email;
     private String username;
     private String password;
-    private MongoName name;
+    private Name name;
     private int matriculationNumber;
     private String studyProgram;
-    private Set<MongoTopicChoice> topicChoices;
-    private Set<MongoThesisTopicBookmark> bookmarkedTopics;
-    private MongoAssignedTopic assignedTopic;
+    private Set<TopicChoice> topicChoices;
+    private Set<ThesisTopic> bookmarkedTopics;
+    private AssignedTopic assignedTopic;
 
-    public MongoStudent() {
-    }
-
-    public MongoStudent(String email, String username, String password, MongoName name, int matriculationNumber, String studyProgram, Set<MongoTopicChoice> topicChoices, Set<MongoThesisTopicBookmark> bookmarkedTopics, MongoAssignedTopic assignedTopic) {
+    public Student(String email, String username, String password, Name name, int matriculationNumber, String studyProgram, Set<TopicChoice> topicChoices, Set<ThesisTopic> bookmarkedTopics, AssignedTopic assignedTopic) {
         this.email = email;
         this.username = username;
         this.password = password;

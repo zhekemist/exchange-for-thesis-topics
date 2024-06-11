@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   profiles:
-    active: expose-mongodb # oder expose-mariadb
+    active: mongodb
   jpa:
     hibernate:
       ddl-auto: validate
@@ -10,6 +10,7 @@ spring:
   data:
     rest:
       base-path: /api
+      detection-strategy: annotated
     mongodb:
       username: root
       password: imse24
@@ -21,3 +22,5 @@ spring:
     url: jdbc:mariadb://127.0.0.1:3306/topic_exchange
     username: root
     password: imse24
+  jackson:
+    default-property-inclusion: non_null

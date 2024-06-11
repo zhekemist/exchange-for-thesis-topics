@@ -1,9 +1,11 @@
 package at.ac.univie.imse.backend.mongodb.repositories;
 
-import at.ac.univie.imse.backend.configuration.repodetection.ExposeViaRestIf;
-import at.ac.univie.imse.backend.mongodb.datamodel.MongoStudent;
+import at.ac.univie.imse.backend.mongodb.datamodel.Student;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@ExposeViaRestIf("expose-mongodb")
-public interface StudentMongoRepository extends MongoRepository<MongoStudent, String> {
+@Profile("mongodb")
+@RepositoryRestResource(collectionResourceRel = "students", path = "students")
+public interface StudentMongoRepository extends MongoRepository<Student, String> {
 }

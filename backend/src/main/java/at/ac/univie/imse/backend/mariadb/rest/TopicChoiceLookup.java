@@ -4,11 +4,13 @@ import at.ac.univie.imse.backend.mariadb.datamodel.TopicChoice;
 import at.ac.univie.imse.backend.mariadb.datamodel.TopicChoiceID;
 import at.ac.univie.imse.backend.mariadb.repositories.ChoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.rest.core.support.EntityLookupSupport;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Profile("mariadb")
 @Component
 public class TopicChoiceLookup extends EntityLookupSupport<TopicChoice> {
     @Autowired

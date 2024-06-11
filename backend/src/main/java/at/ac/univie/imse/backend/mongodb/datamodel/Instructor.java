@@ -1,31 +1,25 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Getter
-@Setter
-//@Document(collection = "instructors")
-@Document
-public class MongoInstructor {
+@NoArgsConstructor
+@Document(collection = "instructors")
+public class Instructor {
     @Id
-    private String userId;
+    private long userId;
     private String email;
     private String username;
     private String password;
-    private MongoName name;
+    private Name name;
     private String contactInformation;
     private boolean isAdministrator;
-    private MongoResearchGroup researchGroup;
+    private ResearchGroup researchGroup;
 
-    public MongoInstructor() {
-    }
-
-    public MongoInstructor(String email, String username, String password, MongoName name, String contactInformation, boolean isAdministrator, MongoResearchGroup researchGroup) {
+    public Instructor(String email, String username, String password, Name name, String contactInformation, boolean isAdministrator, ResearchGroup researchGroup) {
         this.email = email;
         this.username = username;
         this.password = password;

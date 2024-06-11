@@ -1,18 +1,7 @@
 package at.ac.univie.imse.backend;
 
-import at.ac.univie.imse.backend.mongodb.datamodel.*;
-import at.ac.univie.imse.backend.mongodb.repositories.CategoryMongoRepository;
-import at.ac.univie.imse.backend.mongodb.repositories.InstructorMongoRepository;
-import at.ac.univie.imse.backend.mongodb.repositories.StudentMongoRepository;
-import at.ac.univie.imse.backend.mongodb.repositories.ThesisTopicMongoRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -21,7 +10,7 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
-    @Bean
+/*    @Bean
     CommandLineRunner commandLineRunner(CategoryMongoRepository categoryMongoRepository, InstructorMongoRepository instructorMongoRepository,
                                         ThesisTopicMongoRepository thesisTopicMongoRepository, StudentMongoRepository studentMongoRepository) {
         return args -> {
@@ -40,7 +29,7 @@ public class BackendApplication {
 
             MongoLiteratureReference literatureReference = new MongoLiteratureReference("title", "author", 2011, "link");
 
-            MongoInstructor instructor = new MongoInstructor("test", "uname", "pword", new MongoName("fname", "lname"), "cinfo", true, researchGroup);
+            MongoInstructor instructor = new MongoInstructor("test", "uname", "pword", new Name("fname", "lname"), "cinfo", true, researchGroup);
             instructorMongoRepository.save(instructor);
 
             Set<MongoLiteratureReference> literatureReferences = new HashSet<>();
@@ -48,7 +37,7 @@ public class BackendApplication {
             MongoThesisTopic thesisTopic = new MongoThesisTopic("test", "descr", new MongoInstructorInThesisTopic(instructor), subCategories, literatureReferences);
             thesisTopicMongoRepository.save(thesisTopic);
 
-            MongoAssignedTopic assignedTopic = new MongoAssignedTopic("reason", new MongoThesisTopicInAssignedTopic("t", "title", "desc", instructor, subCategories, literatureReferences));
+            AssignedTopic assignedTopic = new AssignedTopic("reason", new MongoThesisTopicInAssignedTopic("t", "title", "desc", instructor, subCategories, literatureReferences));
             LocalDateTime timestamp = LocalDateTime.now();
             Set<MongoTopicChoice> topicChoices = new HashSet<>();
             MongoTopicChoice topicChoice = new MongoTopicChoice(new MongoThesisTopicInTopicChoice(thesisTopic), timestamp, 90);
@@ -57,9 +46,9 @@ public class BackendApplication {
             MongoThesisTopicBookmark topicBookmark = new MongoThesisTopicBookmark(thesisTopic);
             topicBookmarks.add(topicBookmark);
 
-            MongoStudent student = new MongoStudent("email", "uname", "pword", new MongoName("r", "r"), 12121212, "stdyprog", topicChoices, topicBookmarks, assignedTopic);
+            MongoStudent student = new MongoStudent("email", "uname", "pword", new Name("r", "r"), 12121212, "stdyprog", topicChoices, topicBookmarks, assignedTopic);
             studentMongoRepository.save(student);
         };
-    }
+    }*/
 
 }

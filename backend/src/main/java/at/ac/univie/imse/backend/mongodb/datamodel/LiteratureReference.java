@@ -1,20 +1,17 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-public class MongoLiteratureReference {
+@Data
+@NoArgsConstructor
+public class LiteratureReference {
     private String title;
     private String author;
     private int year;
     private String link;
 
-    public MongoLiteratureReference() {
-    }
-
-    public MongoLiteratureReference(String title, String author, int year, String link) {
+    public LiteratureReference(String title, String author, int year, String link) {
         this.title = title;
         this.author = author;
         this.year = year;

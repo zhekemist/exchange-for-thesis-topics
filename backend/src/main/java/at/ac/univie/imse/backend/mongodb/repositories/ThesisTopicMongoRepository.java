@@ -1,9 +1,11 @@
 package at.ac.univie.imse.backend.mongodb.repositories;
 
-import at.ac.univie.imse.backend.configuration.repodetection.ExposeViaRestIf;
-import at.ac.univie.imse.backend.mongodb.datamodel.MongoThesisTopic;
+import at.ac.univie.imse.backend.mongodb.datamodel.ThesisTopic;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-@ExposeViaRestIf("expose-mongodb")
-public interface ThesisTopicMongoRepository extends MongoRepository<MongoThesisTopic, String> {
+@Profile("mongodb")
+@RepositoryRestResource(collectionResourceRel = "thesisTopics", path = "thesisTopics")
+public interface ThesisTopicMongoRepository extends MongoRepository<ThesisTopic, String> {
 }

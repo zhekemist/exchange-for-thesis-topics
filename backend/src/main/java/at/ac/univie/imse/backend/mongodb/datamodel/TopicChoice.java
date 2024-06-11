@@ -1,13 +1,16 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
-public class MongoTopicChoice {
-    private MongoThesisTopicInTopicChoice topic;
+@Data
+public class TopicChoice {
+    private ThesisTopic topic;
     private LocalDateTime timestamp;
     private int priorityPoints;
 
-    public MongoTopicChoice(MongoThesisTopicInTopicChoice topic, LocalDateTime timestamp, int priorityPoints) {
+    public TopicChoice(ThesisTopic topic, LocalDateTime timestamp, int priorityPoints) {
         this.topic = topic;
         this.timestamp = timestamp;
         this.priorityPoints = priorityPoints;
