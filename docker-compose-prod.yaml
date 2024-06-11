@@ -8,14 +8,24 @@ services:
       - "443:443"
     networks:
       - backend
+    depends_on:
+      backend:
+        condition: service_healthy
 
-  #  backend:
-  #    build: ./backend
-  #    image: backend
-  #    container_name: backend
-  #    networks:
-  #      - backend
-  #      - databases
+  backend:
+    build: ./backend
+    image: backend
+    container_name: backend
+    networks:
+      - backend
+      - databases
+    healthcheck:
+      test: "wget http://localhost:8080/actuator/health | grep UP || exit 1"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
 
   mariadb:
     build: ./database/mariadb
@@ -28,6 +38,8 @@ services:
       - mariadb-data:/var/lib/mysql
     networks:
       - databases
+    healthcheck:
+      test: "healthcheck.sh --su-mysql --connect --innodb_initialized || exit 1"
 
   mongodb:
     build: ./database/mongodb
@@ -40,6 +52,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=imse24
     networks:
       - databases
+    healthcheck:
+      test: "'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet || exit 1"
 
 volumes:
   mariadb-data:

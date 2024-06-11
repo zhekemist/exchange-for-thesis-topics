@@ -3,6 +3,13 @@ spring:
     name: backend
   profiles:
     active: mongodb, mariadb, migrator
+    group:
+      filler:
+        - "mongodb"
+        - "mariadb"
+      migrator:
+        - "mongodb"
+        - "mariadb"
   jpa:
     hibernate:
       ddl-auto: validate
@@ -16,11 +23,25 @@ spring:
       password: imse24
       database: topic_exchange
       authentication-database: admin
-      host: localhost
+      host: mongodb
       port: 27017
   datasource:
-    url: jdbc:mariadb://127.0.0.1:3306/topic_exchange
+    url: jdbc:mariadb://mariadb:3306/topic_exchange
     username: root
     password: imse24
   jackson:
     default-property-inclusion: non_null
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: filler
+management:
+  server:
+    port: -1

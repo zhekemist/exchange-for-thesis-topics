@@ -1,4 +1,3 @@
-FROM ubuntu:latest
-LABEL authors="tobias"
-
-ENTRYPOINT ["top", "-b"]
+FROM mongo:7.0
+ENV MONGO_INITDB_ROOT_USERNAME=root
+ENV MONGO_INITDB_ROOT_PASSWORD=imse24

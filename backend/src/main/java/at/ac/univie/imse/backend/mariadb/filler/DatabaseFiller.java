@@ -2,11 +2,14 @@ package at.ac.univie.imse.backend.mariadb.filler;
 
 import at.ac.univie.imse.backend.mariadb.datamodel.*;
 import at.ac.univie.imse.backend.mariadb.repositories.*;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.datafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -35,7 +38,10 @@ public class DatabaseFiller {
     @Autowired
     private TopicAssignmentRepository topicAssignmentRepository;
 
-    @PostConstruct
+    @Autowired
+    ApplicationContext context;
+
+    @EventListener(ApplicationStartedEvent.class)
     public void fillDatabaseTables() {
         fillResearchGroupTable(random.nextInt(10, 20));
         fillCategoryTable(random.nextInt(10, 20));
@@ -45,6 +51,7 @@ public class DatabaseFiller {
         fillTopicChoiceTable();
 
         log.info("Filling of the database table is completed.");
+        SpringApplication.exit(context, () -> 0);
     }
 
     public void fillResearchGroupTable(int numberOfRecords) {
