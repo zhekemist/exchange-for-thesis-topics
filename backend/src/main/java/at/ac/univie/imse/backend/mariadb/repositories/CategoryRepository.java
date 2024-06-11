@@ -14,4 +14,7 @@ import java.util.List;
 public interface CategoryRepository extends PagingAndSortingRepository<Category, Long>, CrudRepository<Category, Long> {
     @RestResource(path = "name")
     List<Category> findCategoriesByNameContainsIgnoreCase(String name);
+
+    @RestResource(path = "name-exact")
+    List<Category> findByNameIgnoreCase(String name);
 }

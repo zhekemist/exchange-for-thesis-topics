@@ -37,31 +37,32 @@ public class DatabaseFiller {
 
     @PostConstruct
     public void fillDatabaseTables() {
-        fillResearchGroupTable(random.nextInt(10, 20));
-        fillCategoryTable(random.nextInt(10, 20));
+        fillResearchGroupTable(random.nextInt(5, 10));
+        fillCategoryTable(random.nextInt(10, 15));
         fillInstructorTable(random.nextInt(20, 50));
-        fillThesisTopicTable(random.nextInt(25, 60));
-        fillStudentTable(random.nextInt(20, 50));
+        fillThesisTopicTable(random.nextInt(25, 40));
+        fillStudentTable(random.nextInt(30, 55));
         fillTopicChoiceTable();
 
         log.info("Filling of the database table is completed.");
     }
 
-    public void fillResearchGroupTable(int numberOfRecords) {
-        for (int k = 0; k < numberOfRecords; k++) {
+    public void fillResearchGroupTable(int maximumNumberOfRecords) {
+        for (int k = 0; k < maximumNumberOfRecords; k++) {
             String name = faker.company().industry();
             String researchProfile = faker.university().name();
 
             ResearchGroup researchGroup = new ResearchGroup(name, researchProfile);
-            groupRepository.save(researchGroup);
+            if (groupRepository.findByNameIgnoreCase(name).isEmpty())
+                groupRepository.save(researchGroup);
         }
     }
 
-    public void fillCategoryTable(int numberOfRecords) {
+    public void fillCategoryTable(int maximumNumberOfRecords) {
         Vector<Category> existingCategories = new Vector<>();
         List<Integer> indexesOfSavedCategories = new ArrayList<>();
 
-        for (int k = 0; k < numberOfRecords; k++) {
+        for (int k = 0; k < maximumNumberOfRecords; k++) {
             int indexOfRandomCategory = random.nextInt(categories.size() - 1);
             while (indexesOfSavedCategories.contains(indexOfRandomCategory)) {
                 indexOfRandomCategory = random.nextInt(categories.size() - 1);
@@ -80,20 +81,21 @@ public class DatabaseFiller {
             }
 
             Category category = new Category(name, shortDescription, subCategories);
-            categoryRepository.save(category);
+            if (categoryRepository.findByNameIgnoreCase(name).isEmpty())
+                categoryRepository.save(category);
             existingCategories.add(category);
 
             indexesOfSavedCategories.add(indexOfRandomCategory);
         }
     }
 
-    public void fillInstructorTable(int numberOfRecords) {
+    public void fillInstructorTable(int maximumNumberOfRecords) {
         UserType type = UserType.INSTRUCTOR;
         Iterable<ResearchGroup> researchGroupsIterable = groupRepository.findAll();
         List<ResearchGroup> researchGroups = new ArrayList<>();
         researchGroupsIterable.forEach(researchGroups::add);
 
-        for (int k = 0; k < numberOfRecords; k++) {
+        for (int k = 0; k < maximumNumberOfRecords; k++) {
             String username = faker.name().username();
             Name name = new Name(faker.name().firstName(), faker.name().lastName());
             String email = faker.internet().emailAddress();
@@ -107,7 +109,7 @@ public class DatabaseFiller {
         }
     }
 
-    public void fillThesisTopicTable(int numberOfRecords) {
+    public void fillThesisTopicTable(int maximumNumberOfRecords) {
         Iterable<Category> categoriesIterable = categoryRepository.findAll();
         List<Category> existingCategories = new ArrayList<>();
         categoriesIterable.forEach(existingCategories::add);
@@ -115,7 +117,7 @@ public class DatabaseFiller {
         List<Instructor> existingInstructors = new ArrayList<>();
         instructorIterableIterable.forEach(existingInstructors::add);
 
-        for (int k = 0; k < numberOfRecords; k++) {
+        for (int k = 0; k < maximumNumberOfRecords; k++) {
             String title = faker.lorem().word();
             String description = faker.lorem().sentence();
             Set<Category> categories = new HashSet<>();
@@ -138,9 +140,10 @@ public class DatabaseFiller {
             Instructor instructor = existingInstructors.get(random.nextInt(existingInstructors.size()));
 
             ThesisTopic thesisTopic = new ThesisTopic(title, description, categories, references, instructor);
-            topicRepository.save(thesisTopic);
-
-            handleThesisTopicSave(thesisTopic);
+            if (!topicRepository.existsThesisTopicByTitleIgnoreCase(title)) {
+                topicRepository.save(thesisTopic);
+                handleThesisTopicSave(thesisTopic);
+            }
         }
     }
 
@@ -153,18 +156,20 @@ public class DatabaseFiller {
         }
     }
 
-    public void fillStudentTable(int numberOfRecords) {
+    public void fillStudentTable(int maximumNumberOfRecords) {
         UserType type = UserType.STUDENT;
         Iterable<ThesisTopic> thesisTopicIterable = topicRepository.findAll();
         List<ThesisTopic> thesisTopics = new ArrayList<>();
         thesisTopicIterable.forEach(thesisTopics::add);
 
-        for (int k = 0; k < numberOfRecords; k++) {
+        for (int k = 0; k < maximumNumberOfRecords; k++) {
             String username = faker.name().username();
             Name name = new Name(faker.name().firstName(), faker.name().lastName());
             String email = faker.internet().emailAddress();
             String password = faker.internet().password();
             String studyProgram = faker.educator().course();
+            if (random.nextInt(3) == 1)
+                studyProgram = "Bachelor of Computer Science";
             int matriculationNumber = random.nextInt(10000000, 99999999);
             Set<TopicChoice> choices = new HashSet<>();
 
@@ -182,7 +187,7 @@ public class DatabaseFiller {
 
             studentRepository.save(student);
 
-            if (random.nextInt(10) == 1) {
+            if (k > 4 && random.nextInt(4) == 1) {
                 Iterable<AssignedTopic> assignedThesisTopicRealtionIterable = topicAssignmentRepository.findAll();
                 List<AssignedTopic> assignedThesisTopicsRealtion = new ArrayList<>();
                 assignedThesisTopicRealtionIterable.forEach(assignedThesisTopicsRealtion::add);
