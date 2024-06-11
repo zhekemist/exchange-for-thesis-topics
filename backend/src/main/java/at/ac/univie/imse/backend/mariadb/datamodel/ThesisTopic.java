@@ -23,17 +23,17 @@ public class ThesisTopic implements Serializable {
     private String title;
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "belongs_to",
             joinColumns = {@JoinColumn(name = "topic_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "topic")
     @MapKey(name = "referenceNumber")
     private Map<Long, LiteratureReference> references = new HashMap<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supervisor_id")
     private Instructor supervisor;
 

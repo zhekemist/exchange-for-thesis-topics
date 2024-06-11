@@ -15,4 +15,11 @@ public class TopicChoice {
         this.timestamp = timestamp;
         this.priorityPoints = priorityPoints;
     }
+
+    public TopicChoice(at.ac.univie.imse.backend.mariadb.datamodel.TopicChoice topicChoice) {
+        at.ac.univie.imse.backend.mariadb.datamodel.ThesisTopic mariaTopic = topicChoice.getTopic();
+        this.topic = new ThesisTopic(mariaTopic.getTopicId(), mariaTopic.getTitle(), mariaTopic.getDescription(), mariaTopic.getSupervisor());
+        this.timestamp = topicChoice.getTimestamp();
+        this.priorityPoints = topicChoice.getPriorityPoints();
+    }
 }

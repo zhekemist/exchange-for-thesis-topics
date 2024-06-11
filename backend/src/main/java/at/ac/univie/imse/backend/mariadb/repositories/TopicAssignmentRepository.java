@@ -4,7 +4,12 @@ import at.ac.univie.imse.backend.mariadb.datamodel.AssignedTopic;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+import java.util.List;
 
 @Profile("mariadb")
 public interface TopicAssignmentRepository extends PagingAndSortingRepository<AssignedTopic, Long>, CrudRepository<AssignedTopic, Long> {
+    @RestResource(path = "student-id", rel = "student-id")
+    List<AssignedTopic> findByStudent_UserId(Long userId);
 }

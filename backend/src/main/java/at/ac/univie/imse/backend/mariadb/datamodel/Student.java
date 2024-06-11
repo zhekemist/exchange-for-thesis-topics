@@ -14,10 +14,10 @@ public class Student extends User {
     private String studyProgram;
     private int matriculationNumber;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "student")
     private Set<TopicChoice> choices = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "bookmarked",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "topic_id")}

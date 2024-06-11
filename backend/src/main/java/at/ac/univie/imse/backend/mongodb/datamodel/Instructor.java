@@ -45,4 +45,9 @@ public class Instructor {
         this.name = new Name(name.firstName(), name.lastName());
         this.researchGroup = new ResearchGroup(researchGroup);
     }
+
+    public Instructor(long userId, at.ac.univie.imse.backend.mariadb.datamodel.Name name) {
+        this.userId = String.valueOf(String.valueOf(userId));
+        this.name = new Name(name.firstName(), name.lastName());
+    }
 }

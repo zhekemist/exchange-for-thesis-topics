@@ -41,9 +41,8 @@ public class Category {
         this.name = category.getName();
         this.shortDescription = category.getShortDescription();
         this.superCategory = null;
-        Set<String> ancestorCategories = null;
-//            log.info(String.valueOf("number of subcategories:" + category.getSubCategories().size()));
-//            for (Category ancestorCategory : category.getSubCategories())
-//                ancestorCategories.add(ancestorCategory.getName());
+        if (category.getSubCategories() != null)
+            for (at.ac.univie.imse.backend.mariadb.datamodel.Category ancestorCategory : category.getSubCategories())
+                this.ancestorCategories.add(ancestorCategory.getName());
     }
 }
