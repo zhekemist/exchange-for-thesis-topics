@@ -13,7 +13,6 @@ function getFormattedTimestamp() {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
-const CHOICES_URL = 'http://localhost:8080/api/topicChoices';
 const MAX_PRIORITY_POINTS = 1000;
 
 export async function getRemainingPriorityPoints(studentIdLink) {
@@ -35,18 +34,18 @@ export async function getChoices(studentIdLink) {
     return result;
 }
 
-function addChoice(studentIdLink, topicIdLink, priorityPoints) {
-    console.log(studentIdLink, topicIdLink, priorityPoints);
+function addChoice(studentIdLink, topic, priorityPoints) {
+    console.log(studentIdLink, topic.idLink, priorityPoints);
     const choice = {
         timestamp: getFormattedTimestamp(),
         priorityPoints: priorityPoints,
-        topic: topicIdLink,
-        student: studentIdLink
+        topic: topic
     };
 
     console.log(JSON.stringify(choice))
 
-    return fetch(CHOICES_URL, {
+    const url = studentIdLink + "/choices"
+    return fetch(url, {
         method: 'POST',
         mode: "cors",
         headers: {'Content-Type': 'application/json'},
@@ -57,13 +56,17 @@ function addChoice(studentIdLink, topicIdLink, priorityPoints) {
     );
 }
 
-export function addChoiceAndRedirect(studentIdLink, topicIdLink, priorityPoints, redirectUrl) {
+export function addChoiceAndRedirect(form, studentIdLink, topic, priorityPoints, redirectUrl) {
+    if (!form.checkValidity()) {
+        return;
+    }
+
     if (priorityPoints < 1) {
         alert("Input value must be at least 1");
         return;
     }
 
-    const request = addChoice(studentIdLink, topicIdLink, priorityPoints);
+    const request = addChoice(studentIdLink, topic, priorityPoints);
     request.then(
         (_) => {
             window.location.href = redirectUrl;

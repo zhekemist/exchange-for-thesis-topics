@@ -14,7 +14,7 @@ async function sendTopic(supervisorIdLink, title, description, categories, refer
         supervisor: supervisorIdLink,
         title: title,
         description: description,
-        categories: Object.values(categories).map(category => category.idLink),
+        categories: Object.values(categories),
         references: references
     }
     const topicBody = JSON.stringify(topic);
@@ -109,7 +109,7 @@ export function createTopicCreationForm() {
                     response => {
                         if (response.ok) {
                             window.alert("Topic submitted successfully!");
-                            window.location.href = "profile.html";
+                            window.location.href = "index.html";
                         } else {
                             throw Error("Topic POST response was not okay.");
                         }

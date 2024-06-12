@@ -46,7 +46,7 @@ export function createUserManager() {
     return {
         _users: this.$persist([]),
         _currentUser: this.$persist(0),
-
+        
         init() {
             if (!this.usersLoaded) {
                 const users = requestUsers([DEMO_STUDENTS, DEMO_INSTRUCTORS]);
@@ -79,6 +79,25 @@ export function createUserManager() {
         set currentUser(user) {
             this._currentUser = user;
             this.updateCurrentUser();
+        },
+
+        get priorityPoints() {
+            const choices = this.currentUser.topicChoices;
+            let points = 0;
+            for (const choice of choices) {
+                points += choice.priorityPoints;
+            }
+            return points;
+        },
+
+        checkIfChoiceAlreadyExists(topicIdLink) {
+            const choices = this.currentUser.topicChoices;
+            for (const choice of choices) {
+                if (choice.topic.idLink === topicIdLink.idLink) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

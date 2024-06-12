@@ -34,12 +34,12 @@
         </a>
         <ul class="navbar-nav ms-auto align-items-center">
             <template x-if="usersLoaded && !currentUser.isStudent">
-                <li class="nav-item px-2">
+                <li class="nav-item">
                     <a class="btn btn-primary" href="create-topic.html">Create new Topic</a>
                 </li>
             </template>
             <template x-if="usersLoaded">
-                <li class="nav-item px-2">
+                <li class="nav-item mx-3">
                     <div class="dropdown">
                         <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
                                 data-bs-toggle="dropdown"
@@ -55,7 +55,7 @@
                 </li>
             </template>
             <template x-if="usersLoaded && currentUser.isStudent">
-                <li class="nav-item px-2">
+                <li class="nav-item">
                     <a class="btn bi-list-ul user-icon text-secondary" href="profile.html"></a>
                 </li>
             </template>
@@ -132,8 +132,8 @@
                 <div class="modal-dialog">
                     <template x-if="currentUser.isStudent==true && activeTopicModal==index">
                         <div class="modal-content" x-data="{choosenPrio: 0, remainingPrio: 0, choiceExists: true}"
-                             x-effect="remainingPrio = await $store.getRemainingPriorityPoints(currentUser.idLink);
-                                choiceExists = await $store.checkIfChoiceAlreadyExists(currentUser.idLink, currentTopic)">
+                             x-init="remainingPrio = priorityPoints;
+                                choiceExists = checkIfChoiceAlreadyExists(currentTopic)">
                             <div class="modal-header">
                                 <h5 class="modal-title">
                                     <template x-if="remainingPrio>0 && !choiceExists">
@@ -148,7 +148,9 @@
                             </div>
                             <template x-if="remainingPrio>0 && !choiceExists">
                                 <div class="modal-body">
-                                    <form action="javascript:void(0);">
+                                    <form action="javascript:void(0);" @submit="$store.addChoiceAndRedirect($el,
+                                                currentUser.idLink, currentTopic, choosenPrio, 'profile.html');
+                                                activeTopicModal = null;">
                                         <div class="form-group">
                                             <label :for="'priority-points' + index">Enter the number of priority
                                                 points you want to set:</label>
@@ -168,10 +170,8 @@
                                         </div>
                                         <br>
                                         <div class="d-flex justify-content-end">
-                                            <button @click="$store.addChoiceAndRedirect(
-                                                currentUser.idLink, currentTopic.idLink, choosenPrio, 'profile.html');
-                                                activeTopicModal = null;" class="applyButton"
-                                                    type="button">
+                                            <button class="applyButton"
+                                                    type="submit">
                                                 Submit
                                             </button>
                                         </div>
