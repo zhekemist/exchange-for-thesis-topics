@@ -19,11 +19,12 @@ public class Category {
     private String shortDescription;
 
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "supercategory_id")
     private Set<Category> subCategories = new HashSet<>();
 
-    public Category() {}
+    public Category() {
+    }
 
     public Category(String name, String shortDescription, Set<Category> subCategories) {
         this.name = name;

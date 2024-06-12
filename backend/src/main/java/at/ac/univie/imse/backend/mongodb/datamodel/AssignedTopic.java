@@ -11,4 +11,9 @@ public class AssignedTopic {
         this.reason = reason;
         this.topic = topic;
     }
+
+    public AssignedTopic(at.ac.univie.imse.backend.mariadb.datamodel.AssignedTopic assignedTopic) {
+        this.reason = assignedTopic.getReason();
+        this.topic = new ThesisTopic(assignedTopic.getTopic(), true);
+    }
 }

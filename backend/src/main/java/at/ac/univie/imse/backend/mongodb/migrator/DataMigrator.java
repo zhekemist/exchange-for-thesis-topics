@@ -1,8 +1,6 @@
 package at.ac.univie.imse.backend.mongodb.migrator;
 
-import at.ac.univie.imse.backend.mariadb.datamodel.Category;
-import at.ac.univie.imse.backend.mariadb.datamodel.Instructor;
-import at.ac.univie.imse.backend.mariadb.datamodel.ThesisTopic;
+import at.ac.univie.imse.backend.mariadb.datamodel.*;
 import at.ac.univie.imse.backend.mariadb.repositories.*;
 import at.ac.univie.imse.backend.mongodb.repositories.CategoryMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.InstructorMongoRepository;
@@ -13,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Slf4j
 @Profile("migrator")
@@ -37,6 +37,8 @@ public class DataMigrator {
     private ReferenceRepository referenceRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private TopicAssignmentRepository topicAssignmentRepository;
 
     @PostConstruct
     public void migrateDataToMongoDB() {
@@ -80,6 +82,13 @@ public class DataMigrator {
     }
 
     public void migrateStudents() {
+        Iterable<Student> students = studentRepository.findAll();
+
+        for (Student student : students) {
+            List<AssignedTopic> assignedTopic = topicAssignmentRepository.findByStudent_UserId(student.getUserId());
+            at.ac.univie.imse.backend.mongodb.datamodel.Student studentTioAdd = new at.ac.univie.imse.backend.mongodb.datamodel.Student(student, assignedTopic);
+            studentMongoRepository.save(studentTioAdd);
+        }
 
     }
 

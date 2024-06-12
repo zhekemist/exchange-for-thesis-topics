@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -34,11 +35,33 @@ public class ThesisTopic {
         this.description = thesisTopic.getDescription();
         at.ac.univie.imse.backend.mariadb.datamodel.Instructor mariaInstructor = thesisTopic.getSupervisor();
         this.instructor = new Instructor(mariaInstructor.getUserId(), mariaInstructor.getName(), mariaInstructor.getGroup());
-//        for (at.ac.univie.imse.backend.mariadb.datamodel.Category category : thesisTopic.getCategories()) {
-//            categories.add(new Category(category));
-//        }
-//        for (Map.Entry<Long, at.ac.univie.imse.backend.mariadb.datamodel.LiteratureReference> entry : thesisTopic.getReferences().entrySet()) {
-//            literatureReferences.add(new LiteratureReference(entry.getValue()));
-//        }
+        for (at.ac.univie.imse.backend.mariadb.datamodel.Category category : thesisTopic.getCategories()) {
+            categories.add(new Category(category));
+        }
+        for (Map.Entry<Long, at.ac.univie.imse.backend.mariadb.datamodel.LiteratureReference> entry : thesisTopic.getReferences().entrySet()) {
+            literatureReferences.add(new LiteratureReference(entry.getValue()));
+        }
+    }
+
+    public ThesisTopic(long topicId, String title, String description, at.ac.univie.imse.backend.mariadb.datamodel.Instructor instructor) {
+        this.topicId = String.valueOf(topicId);
+        this.title = title;
+        this.description = description;
+        this.instructor = new Instructor(instructor.getUserId(), instructor.getName());
+        categories = null;
+        literatureReferences = null;
+    }
+
+    public ThesisTopic(at.ac.univie.imse.backend.mariadb.datamodel.ThesisTopic thesisTopic, boolean allInstructorInformation) {
+        this.topicId = String.valueOf(thesisTopic.getTopicId());
+        this.title = thesisTopic.getTitle();
+        this.description = thesisTopic.getDescription();
+        this.instructor = new Instructor(thesisTopic.getSupervisor());
+        for (at.ac.univie.imse.backend.mariadb.datamodel.Category category : thesisTopic.getCategories()) {
+            categories.add(new Category(category));
+        }
+        for (Map.Entry<Long, at.ac.univie.imse.backend.mariadb.datamodel.LiteratureReference> entry : thesisTopic.getReferences().entrySet()) {
+            literatureReferences.add(new LiteratureReference(entry.getValue()));
+        }
     }
 }
