@@ -25,7 +25,7 @@
     <link href="style.css" rel="stylesheet">
 </head>
 
-<body>
+<body x-data="{activeTopicIndex: null}">
 <div x-data="userManager">
     <nav class="navbar navbar-expand-md bg-body-secondary">
         <a @click="window.location.href='index.html'" class="navbar-brand">
@@ -33,32 +33,17 @@
             Thesis Topic Exchange
         </a>
         <ul class="navbar-nav ms-auto align-items-center">
-            <template x-if="usersLoaded">
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <button aria-expanded="false" class="btn btn-secondary dropdown-toggle"
-                                data-bs-toggle="dropdown"
-                                id="changeUserDropDown" type="button" x-text="currentUser.name">
-                        </button>
-                        <ul aria-labelledby="changeUserDropDown" class="dropdown-menu dropdown-menu-end">
-                            <template x-for="(user, index) in users">
-                                <li><a @click="currentUser = index" class="dropdown-item" href="#"
-                                       x-text="user.name"></a></li>
-                            </template>
-                        </ul>
-                    </div>
-                </li>
-            </template>
+            <li class="nav-item mx-2">
+                <a class="btn btn-secondary" href="index.html"><i class="bi-caret-left-fill"></i> Go Back</a>
+            </li>
         </ul>
     </nav>
     <template x-if="currentUser.isStudent">
-        <div class="container mt-5" x-data="topicChoices(currentUser.idLink)"
-             x-effect="topics = $store.getChoices(currentUser.idLink); activeTopicIndex=null">
+        <div class="container mt-5">
             <h2>Your Topic Choices</h2>
             <br>
-
             <div class="accordion">
-                <template :key="index" x-for="(topic, index) in topics">
+                <template :key="index" x-for="(topic, index) in currentUser.topicChoices">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button :aria-controls="'topic-accordion-element' + index"
@@ -67,7 +52,7 @@
                                     @click="activeTopicIndex = activeTopicIndex === index ? null : index"
                                     class="accordion-button"
                                     type="button">
-                                <span x-text="topic.topicData.title"></span>
+                                <span x-text="topic.topic.title"></span>
                             </button>
                         </h2>
                         <div :class="{ 'show': activeTopicIndex === index }"
@@ -79,21 +64,21 @@
                                         <div class="col-md-10">
                                             <div class="row">
                                                 <div class="col">
-                                                    <p x-text="'Instructor: ' + topic.topicData.instructor.name"></p>
+                                                    <p x-text="'Instructor: ' + topic.topic.instructor.name"></p>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col">
-                                                    <p x-text="'Description: ' + topic.topicData.description"></p>
+                                                    <p x-text="'Description: ' + topic.topic.description"></p>
                                                 </div>
                                             </div>
-                                            <div class="row" x-show="topic.topicData.categories.length!=0">
+                                            <div class="row" x-show="topic.topic.categories.length!=0">
                                                 <div class="col">
                                                     Categories:
                                                     <div style='margin-left: 30px'>
                                                         <template
                                                                 :key="index"
-                                                                x-for="(category, index) in topic.topicData.categories">
+                                                                x-for="(category, index) in topic.topic.categories">
                                                             <li x-text="category.name"></li>
                                                         </template>
                                                     </div>

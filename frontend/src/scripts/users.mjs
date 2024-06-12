@@ -1,10 +1,11 @@
 import {alertErrorHandler, responseHandler} from "./utils.mjs";
+import {DEMO_INSTRUCTORS, DEMO_STUDENTS} from "./constants.mjs";
 
 
 function userFromJson(userJSON) {
     const idLink = userJSON['_links']['self']['href'];
     let name = userJSON['name']['firstName'] + " " + userJSON['name']['lastName'];
-    const isStudent = userJSON['userType'] === 'STUDENT';
+    const isStudent = idLink.includes('students');
     if (isStudent) {
         name += " (Student)"
     } else {
@@ -13,13 +14,15 @@ function userFromJson(userJSON) {
     return {
         idLink: idLink,
         name: name,
-        isStudent: isStudent
+        isStudent: isStudent,
+        topicChoices: userJSON['topicChoices']
     }
 }
 
-const STUDENTS_URL = 'http://localhost:8080/api/students?size=4';
-const INSTRUCTORS_URL = 'http://localhost:8080/api/instructors?size=4'
-
+async function requestUser(idLink) {
+    const response = await fetch(idLink, {mode: 'cors'}).then(responseHandler);
+    return userFromJson(response);
+}
 
 function requestUsers(urlList) {
     const promises = []
@@ -46,12 +49,19 @@ export function createUserManager() {
 
         init() {
             if (!this.usersLoaded) {
-                const users = requestUsers([STUDENTS_URL, INSTRUCTORS_URL]);
+                const users = requestUsers([DEMO_STUDENTS, DEMO_INSTRUCTORS]);
                 users.then(users => {
                     this._users.push(...users);
                     this._currentUser = 0;
                 }).catch(alertErrorHandler("Loading of users failed."));
             }
+            this.updateCurrentUser();
+        },
+
+        updateCurrentUser() {
+            requestUser(this.currentUser.idLink).then(
+                user => this._users[this._currentUser] = user
+            );
         },
 
         get usersLoaded() {
@@ -68,6 +78,7 @@ export function createUserManager() {
 
         set currentUser(user) {
             this._currentUser = user;
+            this.updateCurrentUser();
         }
     }
 }

@@ -85,18 +85,3 @@ export async function checkIfChoiceAlreadyExists(studentIdLink, topicIdLink) {
         return false;
     }
 }
-
-export function createTopicChoicesData(studentUrl) {
-    return {
-        topics: [],
-        activeTopicIndex: null,
-
-        init() {
-            this.topics = getChoices(studentUrl);
-        },
-
-        get currentTopic() {
-            return this.topics[this.activeTopicIndex];
-        }
-    }
-}

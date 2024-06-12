@@ -1,10 +1,12 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
 public class TopicChoice {
     private ThesisTopic topic;
     private LocalDateTime timestamp;

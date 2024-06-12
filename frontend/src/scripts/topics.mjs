@@ -16,7 +16,7 @@ export async function requestCategories(categoriesUrl) {
 async function requestSupervisor(supervisorUrl) {
     const response = await fetch(supervisorUrl, {mode: "cors"}).then(responseHandler);
     return {
-        name: response['name']['firstName'] + " " + response['name']['lastName'],
+        name: response['name'],
         contactInformation: response['contactInformation'],
         email: response['emails']
     };
@@ -26,9 +26,11 @@ async function requestTopicDetails(topicJson, doSupervisorRequest = true) {
     return {
         idLink: getLink(topicJson, 'self'),
         title: topicJson['title'],
-        instructor: doSupervisorRequest ? (await requestSupervisor(getLink(topicJson, 'supervisor'))) : null,
+        instructor: topicJson['instructor'] || (doSupervisorRequest ?
+            (await requestSupervisor(getLink(topicJson, 'supervisor')))
+            : null),
         description: topicJson['description'],
-        categories: await requestCategories(getLink(topicJson, 'categories'))
+        categories: topicJson['categories'] || await requestCategories(getLink(topicJson, 'categories'))
     };
 }
 
