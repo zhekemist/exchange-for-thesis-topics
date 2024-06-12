@@ -1,57 +1,57 @@
+import {alertErrorHandler, responseHandler} from "./utils.mjs";
+
 const REPORTS = [
     {
         name: "Supervisees Within a Research Group",
-        endpoint: ""
+        endpoint: "http://localhost:8080/api/report/supervisees",
+        columns: {
+            firstName: "First Name",
+            lastName: "Last Name",
+            matriculationNumber: "Matriculation Nr.",
+            email: "E-Mail",
+            title: "Thesis Title",
+            supervisorFirstName: "First Name (Supervisor)",
+            supervisorLastName: "Last Name (Supervisor)"
+        }
     },
     {
         name: "Most Popular Topics per Category",
-        endpoint: ""
+        endpoint: "",
+        columns: {}
     },
 ]
 
 function fetchReport(reportEndpoint) {
-    // return fetch(reportEndpoint, {mode: "cors"})
-    //     .then(responseHandler)
-    //     .catch(alertErrorHandler("Could not fetch the report results!"));
-    return Promise.resolve({
-        usedFilter: "Some Filter",
-        columnNames: ["Spalte 1", "Spalte 2", "Spalte 3"],
-        reportData: [
-            {
-                spalte1: "ABC",
-                spalte2: "DEF",
-                spalte3: "GHI"
-            },
-            {
-                spalte1: "ABC",
-                spalte2: "DEF",
-                spalte3: "GHI"
-            }
-        ]
-    });
+    return fetch(reportEndpoint, {mode: "cors"})
+        .then(responseHandler)
+        .catch(alertErrorHandler("Could not fetch the report results!"));
 }
 
 export function createReportInformation() {
     return {
         reportIdx: this.$persist(null),
         usedFilter: null,
-        columnNames: null,
         reportData: null,
 
         get currentReport() {
             return REPORTS[this.reportIdx];
         },
 
+        get columns() {
+            return REPORTS[this.reportIdx].columns;
+        },
+
         openReport(reportIdx) {
             this.reportIdx = reportIdx;
+            this.columns = REPORTS[reportIdx].columns;
             window.location.href = 'report.html';
         },
 
         loadReport() {
+            console.log(this.columns)
             fetchReport(this.currentReport.endpoint)
                 .then(reportResult => {
                     this.usedFilter = reportResult.usedFilter;
-                    this.columnNames = reportResult.columnNames;
                     this.reportData = reportResult.reportData;
                 })
         }

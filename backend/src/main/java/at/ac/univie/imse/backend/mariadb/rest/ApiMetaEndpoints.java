@@ -13,9 +13,9 @@ import java.util.TimerTask;
 @Profile("mariadb")
 @CrossOrigin
 @RestController
-@RequestMapping("/api-meta")
+@RequestMapping("/api/meta")
 @AllArgsConstructor
-public class RestEndpoints {
+public class ApiMetaEndpoints {
 
     ApplicationContext context;
 

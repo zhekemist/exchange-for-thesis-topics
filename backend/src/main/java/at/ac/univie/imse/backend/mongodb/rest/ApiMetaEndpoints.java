@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @Profile("mongodb")
 @RestController
-@RequestMapping("/api-meta")
-public class RestEndpoints {
+@RequestMapping("/api/meta")
+public class ApiMetaEndpoints {
     @GetMapping("/version")
     public ResponseEntity<String> getVersions() {
         return ResponseEntity.ok("\"MONGODB\"");
