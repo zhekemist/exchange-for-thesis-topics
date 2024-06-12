@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Topic Exchange</title>
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
+
+    <!-- Local Scripts -->
+    <script src="report.js" type="module"></script>
+
+    <!-- Bootstrap -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+    <script crossorigin="anonymous" defer
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Alpine JS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Local Stylesheet-->
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+<div>
+    <nav class="navbar navbar-expand-md bg-body-secondary">
+        <a class="navbar-brand">
+            <img class="img-fluid uni-logo" src="assets/uniLogo.png">
+            Thesis Topic Exchange
+        </a>
+        <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item mx-2">
+                <a class="btn btn-secondary" href="index.html"><i class="bi-caret-left-fill"></i> Go Back</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container mt-5" x-data="reportInformation" x-init="loadReport()">
+        <h5>Data Analytics Report</h5>
+        <h2 x-text="currentReport.name"></h2>
+        <h6>The randomly selected filter is: <i x-text="usedFilter"></i></h6>
+        <br>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <template x-for="columnName in columnNames">
+                    <th scope="col" x-text="columnName"></th>
+                </template>
+            </tr>
+            </thead>
+            <tbody>
+            <template x-for="dataRow in reportData">
+                <tr>
+                    <template x-for="(dataEntry, _) in dataRow">
+                        <td x-text="dataEntry"></td>
+                    </template>
+                </tr>
+            </template>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -202,12 +202,17 @@
                     <h5 class="modal-title">Special actions</h5>
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
-                <div class="modal-body d-flex justify-content-center flex-column">
+                <div class="modal-body d-flex justify-content-center flex-column" x-data="reportInformation">
                     <button :disabled="!$store['api-version'].isMariaApi" class="btn btn-warning my-2"
                             @click="window.location.href='migration.html'">Migrate to NoSQL
                     </button>
-                    <button class="btn btn-primary my-2">Show [Name von Report 1]</button>
-                    <button class="btn btn-primary my-2">Show [Name von Report 2]</button>
+                    <button class="btn btn-primary my-2" @click="openReport(0)">Show <strong>Supervisees
+                        Within a Research
+                        Group</strong>
+                    </button>
+                    <button class="btn btn-primary my-2" @click="openReport(1)">Show <strong>Most Popular
+                        Topics per
+                        Category</strong></button>
                 </div>
             </div>
         </div>
