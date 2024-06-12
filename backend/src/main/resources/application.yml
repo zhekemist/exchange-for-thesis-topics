@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   profiles:
-    active: mongodb, mariadb, migrator
+    active: dev, migrator
     group:
       filler:
         - "mongodb"
@@ -45,3 +45,21 @@ spring:
 management:
   server:
     port: -1
+---
+spring:
+  config:
+    activate:
+      on-profile: filler
+management:
+  server:
+    port: -1
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  data:
+    mongodb:
+      host: localhost
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/topic_exchange
