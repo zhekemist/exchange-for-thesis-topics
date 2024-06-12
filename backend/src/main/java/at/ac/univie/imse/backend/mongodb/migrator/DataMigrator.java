@@ -6,10 +6,12 @@ import at.ac.univie.imse.backend.mongodb.repositories.CategoryMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.InstructorMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.StudentMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.ThesisTopicMongoRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,7 +42,10 @@ public class DataMigrator {
     @Autowired
     private TopicAssignmentRepository topicAssignmentRepository;
 
-    @PostConstruct
+    @Autowired
+    ApplicationContext context;
+
+    @EventListener(ApplicationStartedEvent.class)
     public void migrateDataToMongoDB() {
         clearDatabase();
 
