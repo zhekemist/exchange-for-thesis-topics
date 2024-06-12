@@ -1,6 +1,7 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -8,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Document(collection = "categories")
 public class Category {
     @MongoId

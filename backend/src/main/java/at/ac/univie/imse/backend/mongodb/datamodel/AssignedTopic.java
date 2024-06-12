@@ -1,8 +1,10 @@
 package at.ac.univie.imse.backend.mongodb.datamodel;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class AssignedTopic {
     private String reason;
     private ThesisTopic topic;
