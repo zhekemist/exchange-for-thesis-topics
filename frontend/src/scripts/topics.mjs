@@ -1,6 +1,5 @@
 import {alertErrorHandler, getLink, responseHandler} from "./utils.mjs";
-
-const TOPICS_URL = 'http://localhost:8080/api/thesisTopics'
+import {TOPICS_ENDPOINT} from "./constants.mjs";
 
 export async function requestCategories(categoriesUrl) {
     const response = await fetch(categoriesUrl, {mode: "cors"}).then(responseHandler);
@@ -38,7 +37,7 @@ export function requestTopic(topicUrl) {
     return fetch(topicUrl, {mode: "cors"}).then(responseHandler).then(topic => requestTopicDetails(topic));
 }
 
-export function requestTopics(url = TOPICS_URL, doSupervisorRequest = true) {
+export function requestTopics(url = TOPICS_ENDPOINT, doSupervisorRequest = true) {
     return fetch(url, {mode: "cors"})
         .then(responseHandler)
         .then(topics => Promise.all(topics['_embedded']['thesisTopics'].map(

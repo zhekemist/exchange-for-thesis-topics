@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-@Profile("expose-maria")
+@Profile("mariadb")
 @Component
 @RepositoryEventHandler
 public class ThesisTopicEventHandler {

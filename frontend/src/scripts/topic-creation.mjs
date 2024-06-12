@@ -1,24 +1,31 @@
 import {alertErrorHandler, responseHandler} from "./utils.mjs";
 import {requestCategories} from "./topics.mjs";
-
-const TOPICS_URL = "http://localhost:8080/api/thesisTopics";
-const TOPIC_EXISTS_URL = "http://localhost:8080/api/thesisTopics/search/exists";
+import {CATEGORIES_ENPOINT, TOPIC_EXISTS_ENDPOINT, TOPICS_ENDPOINT} from "./constants.mjs";
 
 async function queryTitleExistence(title) {
-    const url = `${TOPIC_EXISTS_URL}?title=${encodeURIComponent(title)}`;
+    const url = `${TOPIC_EXISTS_ENDPOINT}?title=${encodeURIComponent(title)}`;
     return fetch(url, {mode: "cors"}).then(responseHandler);
 }
 
-async function sendTopic(supervisorIdLink, title, description, categories, references) {
+async function sendTopic(supervisor, title, description, categories, references) {
     const topic = {
-        supervisor: supervisorIdLink,
         title: title,
         description: description,
         categories: Object.values(categories),
-        references: references
     }
+
+    if (Alpine.store("api-version").isMariaApi) {
+        topic.supervisorId = supervisor.idLink;
+        topic.categories = topic.categories.map(category => category.idLink);
+        topic.references = references;
+    } else {
+        topic.supervisor = supervisor;
+        topic.literatureReference = Object.values(references);
+    }
+
+
     const topicBody = JSON.stringify(topic);
-    return fetch(TOPICS_URL, {
+    return fetch(TOPICS_ENDPOINT, {
         method: 'POST',
         mode: "cors",
         headers: {'Content-Type': 'application/json'},
@@ -26,7 +33,6 @@ async function sendTopic(supervisorIdLink, title, description, categories, refer
     });
 }
 
-const CATEGORIES_URL = "http://localhost:8080/api/categories";
 
 export function createTopicCreationForm() {
     return {
@@ -66,7 +72,7 @@ export function createTopicCreationForm() {
         },
 
         searchCategories() {
-            const url = `${CATEGORIES_URL}/search/name?name=${this.categorySearch}`;
+            const url = `${CATEGORIES_ENPOINT}/search/name?name=${this.categorySearch}`;
             requestCategories(url).then(categories => {
                 this.categoryResults = Object.fromEntries(categories.map(category => [category.idLink, category]));
             }).catch(alertErrorHandler("Failed to search for categories."));
@@ -103,9 +109,9 @@ export function createTopicCreationForm() {
             delete this.literatureReferences[number];
         },
 
-        submitTopic(supervisorIdLink) {
+        submitTopic(supervisor) {
             if (this.description && this.form.checkValidity()) {
-                sendTopic(supervisorIdLink, this.title, this.description, this.selectedCategories, this.literatureReferences).then(
+                sendTopic(supervisor, this.title, this.description, this.selectedCategories, this.literatureReferences).then(
                     response => {
                         if (response.ok) {
                             window.alert("Topic submitted successfully!");
