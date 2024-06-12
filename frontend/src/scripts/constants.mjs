@@ -11,3 +11,4 @@ export const DEMO_INSTRUCTORS = `${API_BASE_URL}/instructors?size=4`
 
 export const META_API_BASE_URL = `${HOST}/api-meta`
 export const VERSION_ENDPOINT = `${META_API_BASE_URL}/version`
+export const MIGRATION_ENDPOINT = `${META_API_BASE_URL}/migrate`

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>Topic Exchange</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link href="assets/favicon.ico" rel="icon" type="image/x-icon">
 
     <!-- Local Scripts -->
     <script src="index.js" type="module"></script>
@@ -149,9 +149,9 @@
                             </div>
                             <template x-if="remainingPrio>0 && !choiceExists">
                                 <div class="modal-body">
-                                    <form action="javascript:void(0);" @submit="$store.addChoiceAndRedirect($el,
+                                    <form @submit="$store.addChoiceAndRedirect($el,
                                                 currentUser.idLink, currentTopic, choosenPrio, 'profile.html');
-                                                activeTopicModal = null;">
+                                                activeTopicModal = null;" action="javascript:void(0);">
                                         <div class="form-group">
                                             <label :for="'priority-points' + index">Enter the number of priority
                                                 points you want to set:</label>
@@ -203,7 +203,9 @@
                     <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body d-flex justify-content-center flex-column">
-                    <button class="btn btn-warning my-2">Migrate to NoSQL</button>
+                    <button :disabled="!$store['api-version'].isMariaApi" class="btn btn-warning my-2"
+                            @click="window.location.href='migration.html'">Migrate to NoSQL
+                    </button>
                     <button class="btn btn-primary my-2">Show [Name von Report 1]</button>
                     <button class="btn btn-primary my-2">Show [Name von Report 2]</button>
                 </div>
