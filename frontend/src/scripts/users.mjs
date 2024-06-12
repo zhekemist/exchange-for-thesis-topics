@@ -1,8 +1,9 @@
 import {alertErrorHandler, responseHandler} from "./utils.mjs";
 import {DEMO_INSTRUCTORS, DEMO_STUDENTS} from "./constants.mjs";
+import {getChoices} from "./choices.mjs";
 
 
-function userFromJson(userJSON) {
+async function userFromJson(userJSON) {
     const idLink = userJSON['_links']['self']['href'];
     let name = userJSON['name']['firstName'] + " " + userJSON['name']['lastName'];
     const isStudent = idLink.includes('students');
@@ -15,13 +16,13 @@ function userFromJson(userJSON) {
         idLink: idLink,
         name: name,
         isStudent: isStudent,
-        topicChoices: userJSON['topicChoices']
+        topicChoices: userJSON['topicChoices'] || (isStudent ? await getChoices(idLink) : null)
     }
 }
 
 async function requestUser(idLink) {
     const response = await fetch(idLink, {mode: 'cors'}).then(responseHandler);
-    return userFromJson(response);
+    return await userFromJson(response);
 }
 
 function requestUsers(urlList) {
@@ -41,12 +42,11 @@ function requestUsers(urlList) {
         }).flat().map(userFromJson))
 }
 
-
 export function createUserManager() {
     return {
         _users: this.$persist([]),
         _currentUser: this.$persist(0),
-        
+
         init() {
             if (!this.usersLoaded) {
                 const users = requestUsers([DEMO_STUDENTS, DEMO_INSTRUCTORS]);

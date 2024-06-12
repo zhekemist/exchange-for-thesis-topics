@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Profile("mongodb")
 @RepositoryRestController
-public class CustomMongoDBRestEndpoints {
+public class RepositoryRestEndpoints {
     @Autowired
     StudentMongoRepository studentRepository;
 

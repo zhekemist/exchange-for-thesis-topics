@@ -1,5 +1,6 @@
 import {alertErrorHandler, getLink, responseHandler} from "./utils.mjs";
 import {requestTopic} from "./topics.mjs";
+import {CHOICES_ENDPOINT} from "./constants.mjs";
 
 function getFormattedTimestamp() {
     const now = new Date();
@@ -28,7 +29,7 @@ export async function getChoices(studentIdLink) {
     for (const topicChoiceJson of response['_embedded']['topicChoices']) {
         result.push({
             priorityPoints: topicChoiceJson['priorityPoints'],
-            topicData: await requestTopic(getLink(topicChoiceJson, 'topic'))
+            topic: await requestTopic(getLink(topicChoiceJson, 'topic'))
         });
     }
     return result;
@@ -36,15 +37,25 @@ export async function getChoices(studentIdLink) {
 
 function addChoice(studentIdLink, topic, priorityPoints) {
     console.log(studentIdLink, topic.idLink, priorityPoints);
+
     const choice = {
         timestamp: getFormattedTimestamp(),
         priorityPoints: priorityPoints,
         topic: topic
     };
 
+    let url;
+    if (Alpine.store('api-version').isMariaApi) {
+        url = CHOICES_ENDPOINT;
+        choice.topic = topic.idLink;
+        choice.student = studentIdLink;
+    } else {
+        url = studentIdLink + "/choices"
+    }
+
     console.log(JSON.stringify(choice))
 
-    const url = studentIdLink + "/choices"
+
     return fetch(url, {
         method: 'POST',
         mode: "cors",
