@@ -8,6 +8,7 @@ import at.ac.univie.imse.backend.mongodb.repositories.StudentMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.ThesisTopicMongoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
@@ -55,6 +56,8 @@ public class DataMigrator {
         migrateThesisTopics();
         migrateStudents();
         log.info(String.valueOf("Migration finished"));
+
+        SpringApplication.exit(context, () -> 0);
     }
 
     public void migrateCategories() {
