@@ -48,14 +48,12 @@ public class DataMigrator {
 
     @EventListener(ApplicationStartedEvent.class)
     public void migrateDataToMongoDB() {
-        clearDatabase();
-
-        log.info(String.valueOf("Migration stared"));
+        log.info("Migration stared");
         migrateCategories();
         migrateInstructors();
         migrateThesisTopics();
         migrateStudents();
-        log.info(String.valueOf("Migration finished"));
+        log.info("Migration finished");
 
         SpringApplication.exit(context, () -> 0);
     }
@@ -98,12 +96,5 @@ public class DataMigrator {
             studentMongoRepository.save(studentTioAdd);
         }
 
-    }
-
-    public void clearDatabase() {
-        categoryMongoRepository.deleteAll();
-        instructorMongoRepository.deleteAll();
-        studentMongoRepository.deleteAll();
-        thesisTopicMongoRepository.deleteAll();
     }
 }
