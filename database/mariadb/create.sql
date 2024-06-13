@@ -42,7 +42,7 @@ CREATE TABLE student
 CREATE TABLE thesis_topic
 (
     topic_id      BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title         TEXT   NOT NULL,
+    title         TEXT   NOT NULL UNIQUE,
     description   TEXT   NOT NULL,
     supervisor_id BIGINT NOT NULL,
     FOREIGN KEY (supervisor_id) REFERENCES instructor (user_id) ON DELETE CASCADE
@@ -63,7 +63,7 @@ CREATE TABLE literature_reference
 CREATE TABLE category
 (
     category_id       BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name              TEXT NOT NULL,
+    name              TEXT NOT NULL UNIQUE,
     short_description TEXT NOT NULL,
     supercategory_id  BIGINT,
     FOREIGN KEY (supercategory_id) REFERENCES category (category_id) ON DELETE CASCADE
