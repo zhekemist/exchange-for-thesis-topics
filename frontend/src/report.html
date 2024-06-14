@@ -41,7 +41,9 @@
     <div class="container mt-5" x-data="reportInformation" x-init="loadReport()">
         <h5>Data Analytics Report</h5>
         <h2 x-text="currentReport.name"></h2>
-        <h6>The randomly selected filter is: <i x-text="usedFilter"></i></h6>
+        <template x-if="usedFilter">
+            <h6>The randomly selected filter is: <i x-text="usedFilter"></i></h6>
+        </template>
         <br>
         <table class="table table-hover table-bordered">
             <thead>
