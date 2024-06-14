@@ -95,10 +95,11 @@ export function createUserManager() {
             return points;
         },
 
-        checkIfChoiceAlreadyExists(topicIdLink) {
+        checkIfChoiceAlreadyExists(topic) {
             const choices = this.currentUser.topicChoices;
             for (const choice of choices) {
-                if (choice.topic.idLink === topicIdLink.idLink) {
+                console.log(choice);
+                if (choice.topic.title === topic.title) {
                     return true;
                 }
             }
