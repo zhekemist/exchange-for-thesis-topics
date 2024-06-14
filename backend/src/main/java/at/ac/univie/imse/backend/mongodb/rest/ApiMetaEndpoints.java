@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
-@Profile("mongodb")
+@Profile("mongodb & !filler & !migrator")
 @RestController
 @RequestMapping("/api/meta")
 public class ApiMetaEndpoints {

@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-@Profile("mariadb")
+@Profile("mariadb & !filler & !migrator")
 @Component
 @RepositoryEventHandler
 public class ThesisTopicEventHandler {

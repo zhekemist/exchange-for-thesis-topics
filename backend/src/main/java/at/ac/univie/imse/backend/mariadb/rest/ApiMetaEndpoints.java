@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Profile("mariadb")
+@Profile("mariadb & !filler & !migrator")
 @CrossOrigin
 @RestController
 @RequestMapping("/api/meta")
