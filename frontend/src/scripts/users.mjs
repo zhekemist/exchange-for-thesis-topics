@@ -31,15 +31,19 @@ function requestUsers(urlList) {
         promises.push(fetch(url, {mode: "cors"})
             .then(responseHandler));
     }
-    return Promise.all(promises).then((results) => results
-        .map(result => {
-            result = result['_embedded'];
-            if (result.hasOwnProperty('students')) {
-                return result.students;
-            } else {
-                return result.instructors;
-            }
-        }).flat().map(userFromJson))
+    return Promise.all(promises).then((results) => {
+        const userPromises =
+            results
+                .map(result => {
+                    result = result['_embedded'];
+                    if (result.hasOwnProperty('students')) {
+                        return result.students;
+                    } else {
+                        return result.instructors;
+                    }
+                }).flat().map(userFromJson)
+        return Promise.all(userPromises);
+    });
 }
 
 export function createUserManager() {
@@ -51,6 +55,7 @@ export function createUserManager() {
             if (!this.usersLoaded) {
                 const users = requestUsers([DEMO_STUDENTS, DEMO_INSTRUCTORS]);
                 users.then(users => {
+                    console.log(users);
                     this._users.push(...users);
                     this._currentUser = 0;
                 }).catch(alertErrorHandler("Loading of users failed."));
