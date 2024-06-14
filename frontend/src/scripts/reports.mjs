@@ -16,8 +16,12 @@ const REPORTS = [
     },
     {
         name: "Most Popular Topics per Category",
-        endpoint: "",
-        columns: {}
+        endpoint: "http://localhost:8080/api/report/popularTopics",
+        columns: {
+            categoryName: "Category Name",
+            topicTitles: "Topic titles",
+            topicCounter: "Number of Choices"
+        }
     },
 ]
 
@@ -43,7 +47,6 @@ export function createReportInformation() {
 
         openReport(reportIdx) {
             this.reportIdx = reportIdx;
-            this.columns = REPORTS[reportIdx].columns;
             window.location.href = 'report.html';
         },
 

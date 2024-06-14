@@ -1,10 +1,12 @@
 package at.ac.univie.imse.backend.mongodb.rest;
 
+import at.ac.univie.imse.backend.mongodb.projections.PopularTopicsProjection;
 import at.ac.univie.imse.backend.mongodb.projections.SuperviseesProjection;
 import at.ac.univie.imse.backend.mongodb.repositories.InstructorMongoRepository;
 import at.ac.univie.imse.backend.mongodb.repositories.StudentMongoRepository;
 import at.ac.univie.imse.backend.utils.ReportResult;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @Profile("mongodb & !filler & !migrator")
 @CrossOrigin
 @RestController
@@ -30,6 +33,15 @@ public class ReportEndpoints {
         Iterable<at.ac.univie.imse.backend.mongodb.projections.SuperviseesProjection> result = studentRepository.supervisees(randomResearchGroup);
         ReportResult<SuperviseesProjection> reportResult = ReportResult.<SuperviseesProjection>builder()
                 .usedFilter(randomResearchGroup)
+                .reportData(result)
+                .build();
+        return ResponseEntity.ok(reportResult);
+    }
+
+    @GetMapping("/popularTopics")
+    public ResponseEntity<ReportResult<PopularTopicsProjection>> popularTopicsReport() {
+        Iterable<PopularTopicsProjection> result = studentRepository.popularTopics();
+        ReportResult<PopularTopicsProjection> reportResult = ReportResult.<PopularTopicsProjection>builder()
                 .reportData(result)
                 .build();
         return ResponseEntity.ok(reportResult);

@@ -1,6 +1,8 @@
 package at.ac.univie.imse.backend.mariadb.rest;
 
+import at.ac.univie.imse.backend.mariadb.projections.PopularTopicsProjection;
 import at.ac.univie.imse.backend.mariadb.projections.SuperviseesProjection;
+import at.ac.univie.imse.backend.mariadb.repositories.CategoryRepository;
 import at.ac.univie.imse.backend.mariadb.repositories.GroupRepository;
 import at.ac.univie.imse.backend.mariadb.repositories.StudentRepository;
 import at.ac.univie.imse.backend.utils.ReportResult;
@@ -23,6 +25,7 @@ public class ReportEndpoints {
     ApplicationContext context;
     GroupRepository groupRepository;
     StudentRepository studentRepository;
+    CategoryRepository categoryRepository;
 
     @GetMapping("/supervisees")
     public ResponseEntity<ReportResult<SuperviseesProjection>> superviseesReport() {
@@ -35,4 +38,12 @@ public class ReportEndpoints {
         return ResponseEntity.ok(reportResult);
     }
 
+    @GetMapping("/popularTopics")
+    public ResponseEntity<ReportResult<PopularTopicsProjection>> popularTopicsReport() {
+        Iterable<PopularTopicsProjection> result = categoryRepository.popularTopicsReport();
+        ReportResult<PopularTopicsProjection> reportResult = ReportResult.<PopularTopicsProjection>builder()
+                .reportData(result)
+                .build();
+        return ResponseEntity.ok(reportResult);
+    }
 }
