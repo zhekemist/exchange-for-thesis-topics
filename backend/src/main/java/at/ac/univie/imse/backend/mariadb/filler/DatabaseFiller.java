@@ -43,11 +43,11 @@ public class DatabaseFiller {
 
     @EventListener(ApplicationStartedEvent.class)
     public void fillDatabaseTables() {
-        fillResearchGroupTable(random.nextInt(5, 10));
+        fillResearchGroupTable(random.nextInt(10, 20));
         fillCategoryTable(random.nextInt(10, 15));
-        fillInstructorTable(random.nextInt(20, 50));
-        fillThesisTopicTable(random.nextInt(25, 40));
-        fillStudentTable(random.nextInt(30, 55));
+        fillInstructorTable(random.nextInt(40, 100));
+        fillThesisTopicTable(random.nextInt(50, 80));
+        fillStudentTable(random.nextInt(70, 130));
         fillTopicChoiceTable();
 
         log.info("Filling of the database table is completed.");
