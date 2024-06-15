@@ -23,7 +23,7 @@ async function sendTopic(supervisor, title, description, categories, references)
     }
 
     if (Alpine.store("api-version").isMariaApi) {
-        topic.supervisorId = supervisor.idLink;
+        topic.supervisor = supervisor.idLink;
         topic.categories = topic.categories.map(category => category.idLink);
         topic.references = references;
     } else {

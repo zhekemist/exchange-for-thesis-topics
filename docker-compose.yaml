@@ -23,7 +23,7 @@ services:
       interval: 1m30s
       retries: 10
       start_period: 4m
-      test: "wget -q -O- http://backend:8080/actuator/health | grep UP || exit 1"
+      test: "wget -q -O- http://backend/actuator/health | grep UP || exit 1"
     depends_on:
       mariadb:
         condition: service_healthy
