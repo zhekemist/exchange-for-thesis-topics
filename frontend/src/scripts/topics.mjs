@@ -1,5 +1,5 @@
 import {alertErrorHandler, getLink, responseHandler} from "./utils.mjs";
-import {TOPICS_ENDPOINT} from "./constants.mjs";
+import {SORTED_TOPICS_ENDPOINTS} from "./constants.mjs";
 
 export async function requestCategories(categoriesUrl) {
     const response = await fetch(categoriesUrl, {mode: "cors"}).then(responseHandler);
@@ -37,7 +37,7 @@ export function requestTopic(topicUrl) {
     return fetch(topicUrl, {mode: "cors"}).then(responseHandler).then(topic => requestTopicDetails(topic));
 }
 
-export function requestTopics(url = TOPICS_ENDPOINT, doSupervisorRequest = true) {
+export function requestTopics(url = SORTED_TOPICS_ENDPOINTS, doSupervisorRequest = true) {
     return fetch(url, {mode: "cors"})
         .then(responseHandler)
         .then(topics => Promise.all(topics['_embedded']['thesisTopics'].map(

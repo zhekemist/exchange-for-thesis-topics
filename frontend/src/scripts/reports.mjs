@@ -1,9 +1,10 @@
 import {alertErrorHandler, responseHandler} from "./utils.mjs";
+import {API_BASE_URL} from "./constants.mjs";
 
 const REPORTS = [
     {
         name: "Supervisees Within a Research Group",
-        endpoint: "http://localhost:8080/api/report/supervisees",
+        endpoint: `${API_BASE_URL}/report/supervisees`,
         columns: {
             firstName: "First Name",
             lastName: "Last Name",
@@ -16,7 +17,7 @@ const REPORTS = [
     },
     {
         name: "Most Popular Topics per Category",
-        endpoint: "http://localhost:8080/api/report/popularTopics",
+        endpoint: `${API_BASE_URL}/report/popularTopics`,
         columns: {
             categoryName: "Category Name",
             topicTitles: "Topic titles",

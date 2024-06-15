@@ -7,6 +7,14 @@ async function queryTitleExistence(title) {
     return fetch(url, {mode: "cors"}).then(responseHandler);
 }
 
+function stripDownInstructor(instructor) {
+    return {
+        name: instructor.name,
+        contactInformation: instructor.contactInformation,
+        researchGroup: instructor.researchGroup
+    }
+}
+
 async function sendTopic(supervisor, title, description, categories, references) {
     const topic = {
         title: title,
@@ -19,7 +27,7 @@ async function sendTopic(supervisor, title, description, categories, references)
         topic.categories = topic.categories.map(category => category.idLink);
         topic.references = references;
     } else {
-        topic.supervisor = supervisor;
+        topic.instructor = stripDownInstructor(supervisor.originalObject);
         topic.literatureReference = Object.values(references);
     }
 

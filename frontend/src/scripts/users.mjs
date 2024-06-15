@@ -16,7 +16,8 @@ async function userFromJson(userJSON) {
         idLink: idLink,
         name: name,
         isStudent: isStudent,
-        topicChoices: userJSON['topicChoices'] || (isStudent ? await getChoices(idLink) : null)
+        topicChoices: userJSON['topicChoices'] || (isStudent ? await getChoices(idLink) : null),
+        originalObject: userJSON
     }
 }
 

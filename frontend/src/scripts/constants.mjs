@@ -2,6 +2,7 @@ const HOST = "http://localhost:8080"
 
 export const API_BASE_URL = `${HOST}/api`
 export const TOPICS_ENDPOINT = `${API_BASE_URL}/thesisTopics`
+export const SORTED_TOPICS_ENDPOINTS = `${TOPICS_ENDPOINT}?sort=topicId,desc`
 export const TOPIC_EXISTS_ENDPOINT = `${TOPICS_ENDPOINT}/search/exists`
 export const CHOICES_ENDPOINT = `${API_BASE_URL}/topicChoices`
 export const CATEGORIES_ENPOINT = `${API_BASE_URL}/categories`;
