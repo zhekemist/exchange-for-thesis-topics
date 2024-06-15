@@ -1,5 +1,5 @@
 import {MIGRATION_ENDPOINT, VERSION_ENDPOINT} from "./scripts/constants.mjs";
-import {alertErrorHandler, responseHandler} from "./scripts/utils.mjs";
+import {responseHandler} from "./scripts/utils.mjs";
 
 window.onload = callMigrationEndpoint;
 
@@ -9,11 +9,9 @@ function callMigrationEndpoint() {
         mode: "cors",
         method: "POST"
     }).then(reponse => {
-            if (!reponse.ok) {
-                throw new Error("Migration request was not successful!");
-            }
         }
-    ).catch(alertErrorHandler("Could not request migration!"));
+    ).catch(error => {
+    });
 }
 
 document.addEventListener('alpine:init', () => {

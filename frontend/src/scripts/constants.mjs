@@ -1,4 +1,4 @@
-const HOST = "http://localhost:8080"
+const HOST = "http://localhost"
 
 export const API_BASE_URL = `${HOST}/api`
 export const TOPICS_ENDPOINT = `${API_BASE_URL}/thesisTopics`

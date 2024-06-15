@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 @Profile("mariadb & !filler & !migrator")
 @CrossOrigin
 @RestController
@@ -26,15 +23,7 @@ public class ApiMetaEndpoints {
 
     @PostMapping("/migrate")
     public ResponseEntity<String> migrate() {
-        new Timer().schedule(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        SpringApplication.exit(context, () -> 0);
-                    }
-                },
-                1500
-        );
-        return ResponseEntity.accepted().build();
+        SpringApplication.exit(context, () -> 0);
+        return ResponseEntity.accepted().build(); // not reached anyways
     }
 }

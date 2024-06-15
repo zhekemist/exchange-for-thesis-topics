@@ -37,6 +37,8 @@ management:
   endpoint:
     health:
       enabled: true
+server:
+  port: 80
 ---
 spring:
   config:
