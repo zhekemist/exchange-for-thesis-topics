@@ -46,6 +46,8 @@ function requestUsers(urlList) {
     });
 }
 
+const MAX_PRIORITY_POINTS = 1000;
+
 export function createUserManager() {
     return {
         _users: this.$persist([]),
@@ -88,9 +90,9 @@ export function createUserManager() {
 
         get priorityPoints() {
             const choices = this.currentUser.topicChoices;
-            let points = 0;
+            let points = MAX_PRIORITY_POINTS;
             for (const choice of choices) {
-                points += choice.priorityPoints;
+                points -= choice.priorityPoints;
             }
             return points;
         },
