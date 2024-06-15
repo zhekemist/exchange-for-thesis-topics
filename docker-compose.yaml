@@ -1,37 +1,69 @@
 services:
-  mongodb:
-    image: mongo:7.0
-    container_name: mongodb
+  frontend:
+    build: ./frontend
+    image: frontend
+    container_name: frontend
     ports:
-      - "27017:27017"
-    volumes:
-      - mongodb-data:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=imse24
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    restart: always
-    ports:
-      - "8081:8081"
-    environment:
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=imse24
-      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - "80:80"
+      - "443:443"
+    networks:
+      - backend
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    build: ./backend
+    image: backend
+    container_name: backend
+    networks:
+      - backend
+      - databases
+    healthcheck:
+      interval: 1m30s
+      retries: 10
+      start_period: 4m
+      test: "wget -q -O- http://localhost:8080/actuator/health | grep UP || exit 1"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+
   mariadb:
-    image: mariadb:11.3
+    build: ./database/mariadb
+    image: mariadb
     container_name: mariadb
-    ports:
-      - "3306:3306"
     environment:
       - MARIADB_ROOT_PASSWORD=imse24
       - MARIADB_DATABASE=topic_exchange
     volumes:
       - mariadb-data:/var/lib/mysql
+    networks:
+      - databases
+    healthcheck:
+      start_period: 30s
+      test: "healthcheck.sh --su-mysql --connect --innodb_initialized || exit 1"
+
+  mongodb:
+    build: ./database/mongodb
+    image: mongodb
+    container_name: mongodb
+    volumes:
+      - mongodb-data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=imse24
+    networks:
+      - databases
+    healthcheck:
+      start_period: 30s
+      test: "'db.runCommand(\"ping\").ok' | mongosh localhost:27017/test --quiet || exit 1"
+
 volumes:
   mariadb-data:
   mongodb-data:
+
 networks:
-  default:
-    name: mongodb_network
+  backend:
+  databases:
