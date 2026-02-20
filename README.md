@@ -1,4 +1,4 @@
-# Thesis Topic Exchange
+# Exchange for Bachelor Thesis Topics
 
 A web application for managing bachelor thesis topics. Instructors can post thesis topics, and students can browse and apply for them. The system supports two backends, one based on MariaDB and another one on MongoDB, including a one-click migration feature to transfer data from the relational database to the non-relational one.
 
