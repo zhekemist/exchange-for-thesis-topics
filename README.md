@@ -2,7 +2,9 @@
 
 A web application for managing bachelor thesis topics. Instructors can post thesis topics, and students can browse and apply for them. The system supports two backends, one based on MariaDB and another one on MongoDB, including a one-click migration feature to transfer data from the relational database to the non-relational one.
 
-This project was developed for the *Information Management and Systems Engineering* course at the *University of Vienna* together with my teammate [Felix Windhager](https://github.com/felixwindhager). The conceptual system design, including ER and UML Activity diagrams, is documented [here](docs/conceptual_system_design.pdf).
+This project was developed for the *Information Management and Systems Engineering* course at the *University of Vienna* together with my teammate [Felix Windhager](https://github.com/felixwindhager). 
+
+The conceptual system design, including ER and UML Activity diagrams, is documented [here](docs/conceptual_system_design.pdf).
 
 ## Technologies
 
